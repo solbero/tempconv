@@ -17,7 +17,7 @@ func (b *baseScale) Temp() float64 {
 }
 
 type TempScales interface {
-	*Kelvin | *Celsius
+	*Kelvin | *Celsius | *Fahrenheit
 	Temp() float64
 }
 
@@ -53,4 +53,21 @@ func (c *Celsius) toKelvin() float64 {
 
 func (c *Celsius) fromKelvin(t float64) {
 	c.Init(t - 273.15)
+}
+
+type Fahrenheit struct {
+	baseScale
+}
+
+func (f *Fahrenheit) Init(t float64) *Fahrenheit {
+	f.name, f.temp, f.unit = "Fahrenheit", t, "°F"
+	return f
+}
+
+func (f *Fahrenheit) toKelvin() float64 {
+	return (f.temp + 459.67) * 5 / 9
+}
+
+func (f *Fahrenheit) fromKelvin(t float64) {
+	f.Init((t*9 - 459.67*5) / 5)
 }

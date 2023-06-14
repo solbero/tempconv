@@ -24,6 +24,13 @@ func TestTempString(t *testing.T) {
 		{new(Celsius).Init(.0), "0 °C"},
 	}
 	assertString(t, celsiusCases)
+
+	fahrenheitCases := []stringTemp[*Fahrenheit]{
+		{new(Fahrenheit).Init(0), "0 °F"},
+		{new(Fahrenheit).Init(0.0), "0 °F"},
+		{new(Fahrenheit).Init(.0), "0 °F"},
+	}
+	assertString(t, fahrenheitCases)
 }
 
 func assertString[T TempScales](t *testing.T, cases []stringTemp[T]) {
