@@ -25,6 +25,14 @@ func (k *Kelvin) Init(t float64) *Kelvin {
 	return k
 }
 
+func (k *Kelvin) toKelvin() float64 {
+	return k.temp
+}
+
+func (k *Kelvin) fromKelvin(t float64) {
+	k.Init(t)
+}
+
 type Celsius struct {
 	baseScale
 }
@@ -32,4 +40,12 @@ type Celsius struct {
 func (c *Celsius) Init(t float64) *Celsius {
 	c.name, c.temp, c.unit = "Celsius", t, "°C"
 	return c
+}
+
+func (c *Celsius) toKelvin() float64 {
+	return c.temp + 273.15
+}
+
+func (c *Celsius) fromKelvin(t float64) {
+	c.Init(t - 273.15)
 }
