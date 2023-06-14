@@ -12,8 +12,13 @@ func (b baseScale) String() string {
 	return fmt.Sprintf("%g %v", b.temp, b.unit)
 }
 
+func (b *baseScale) Temp() float64 {
+	return b.temp
+}
+
 type TempScales interface {
 	*Kelvin | *Celsius
+	Temp() float64
 }
 
 type Kelvin struct {
