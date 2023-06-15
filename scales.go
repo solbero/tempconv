@@ -12,13 +12,16 @@ func (b baseScale) String() string {
 	return fmt.Sprintf("%g %v", b.temp, b.unit)
 }
 
-func (b *baseScale) Temp() float64 {
-	return b.temp
+func (b *baseScale) Temp() (float64, error) {
+	if b.name == "" || b.unit == "" {
+		return 0, fmt.Errorf("tempconv: %T is not initalized", b)
+	}
+	return b.temp, nil
 }
 
 type TempScales interface {
 	*Kelvin | *Celsius | *Fahrenheit
-	Temp() float64
+	Temp() (float64, error)
 }
 
 type Kelvin struct {

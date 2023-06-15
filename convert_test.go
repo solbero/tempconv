@@ -48,8 +48,10 @@ func TestConvertFahrenheitToKelvin(t *testing.T) {
 func assertConvert[T, S Converter](t *testing.T, cases []convertTemp[T, S]) {
 	t.Helper()
 	for _, c := range cases {
-		out := Convert(c.input, c.output)
-		got := out.Temp()
+		got, err := out.Temp()
+		if err != nil {
+			t.Fatalf("got %v want none", err)
+		}
 		want := c.want
 
 		if !assertAlmostEqual(got, want, float64EqualityThreshold) {
