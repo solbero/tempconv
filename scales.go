@@ -2,6 +2,12 @@ package tempconv
 
 import "fmt"
 
+const (
+	absoluteZeroK float64 = 0.0
+	absoluteZeroC float64 = -273.15
+	absoluteZeroF float64 = -459.67
+)
+
 type baseScale struct {
 	name string
 	temp float64
@@ -28,9 +34,14 @@ type Kelvin struct {
 	baseScale
 }
 
-func (k *Kelvin) Init(t float64) *Kelvin {
-	k.name, k.temp, k.unit = "Kelvin", t, "K"
-	return k
+func (k *Kelvin) Init(t float64) (*Kelvin, error) {
+	n := "Kelvin"
+	u := "K"
+	if t < absoluteZeroK {
+		return nil, absoluteZeroError(t, absoluteZeroK)
+	}
+	k.name, k.temp, k.unit = n, t, u
+	return k, nil
 }
 
 func (k *Kelvin) toKelvin() float64 {
@@ -45,9 +56,14 @@ type Celsius struct {
 	baseScale
 }
 
-func (c *Celsius) Init(t float64) *Celsius {
-	c.name, c.temp, c.unit = "Celsius", t, "°C"
-	return c
+func (c *Celsius) Init(t float64) (*Celsius, error) {
+	n := "Celsius"
+	u := "°C"
+	if t < absoluteZeroC {
+		return nil, absoluteZeroError(t, absoluteZeroC)
+	}
+	c.name, c.temp, c.unit = n, t, u
+	return c, nil
 }
 
 func (c *Celsius) toKelvin() float64 {
@@ -62,9 +78,14 @@ type Fahrenheit struct {
 	baseScale
 }
 
-func (f *Fahrenheit) Init(t float64) *Fahrenheit {
-	f.name, f.temp, f.unit = "Fahrenheit", t, "°F"
-	return f
+func (f *Fahrenheit) Init(t float64) (*Fahrenheit, error) {
+	n := "Fahrenheit"
+	u := "°F"
+	if t < absoluteZeroF {
+		return nil, absoluteZeroError(t, absoluteZeroF)
+	}
+	f.name, f.temp, f.unit = n, t, u
+	return f, nil
 }
 
 func (f *Fahrenheit) toKelvin() float64 {
@@ -73,4 +94,7 @@ func (f *Fahrenheit) toKelvin() float64 {
 
 func (f *Fahrenheit) fromKelvin(t float64) {
 	f.Init((t*9 - 459.67*5) / 5)
+
+func absoluteZeroError(temp, zero float64) error {
+	return fmt.Errorf("tempconv: input temperature %g is less than absolute zero %g", temp, absoluteZeroC)
 }

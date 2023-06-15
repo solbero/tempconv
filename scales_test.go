@@ -12,23 +12,23 @@ type stringTemp[T TempScales] struct {
 
 func TestTempString(t *testing.T) {
 	kelvinCases := []stringTemp[*Kelvin]{
-		{new(Kelvin).Init(0), "0 K"},
-		{new(Kelvin).Init(0.0), "0 K"},
-		{new(Kelvin).Init(.0), "0 K"},
+		{mustInit(new(Kelvin).Init(0)), "0 K"},
+		{mustInit(new(Kelvin).Init(0.0)), "0 K"},
+		{mustInit(new(Kelvin).Init(.0)), "0 K"},
 	}
 	assertString(t, kelvinCases)
 
 	celsiusCases := []stringTemp[*Celsius]{
-		{new(Celsius).Init(0), "0 °C"},
-		{new(Celsius).Init(0.0), "0 °C"},
-		{new(Celsius).Init(.0), "0 °C"},
+		{mustInit(new(Celsius).Init(0)), "0 °C"},
+		{mustInit(new(Celsius).Init(0.0)), "0 °C"},
+		{mustInit(new(Celsius).Init(.0)), "0 °C"},
 	}
 	assertString(t, celsiusCases)
 
 	fahrenheitCases := []stringTemp[*Fahrenheit]{
-		{new(Fahrenheit).Init(0), "0 °F"},
-		{new(Fahrenheit).Init(0.0), "0 °F"},
-		{new(Fahrenheit).Init(.0), "0 °F"},
+		{mustInit(new(Fahrenheit).Init(0)), "0 °F"},
+		{mustInit(new(Fahrenheit).Init(0.0)), "0 °F"},
+		{mustInit(new(Fahrenheit).Init(.0)), "0 °F"},
 	}
 	assertString(t, fahrenheitCases)
 }
@@ -49,6 +49,22 @@ func TestInitError(t *testing.T) {
 	}
 }
 
+func TestAbsoluteZeroError(t *testing.T) {
+	k := new(Kelvin)
+	c := new(Celsius)
+	f := new(Fahrenheit)
+
+	if _, err := k.Init(absoluteZeroK - 1); err == nil {
+		t.Errorf("got %v want error", err)
+	}
+	if _, err := c.Init(absoluteZeroC - 1); err == nil {
+		t.Errorf("got %v want error", err)
+	}
+	if _, err := f.Init(absoluteZeroF - 1); err == nil {
+		t.Errorf("got %v want error", err)
+	}
+}
+
 func assertString[T TempScales](t *testing.T, cases []stringTemp[T]) {
 	t.Helper()
 	for _, c := range cases {
@@ -59,4 +75,11 @@ func assertString[T TempScales](t *testing.T, cases []stringTemp[T]) {
 			t.Errorf("got %v want %v", got, want)
 		}
 	}
+}
+
+func mustInit[T TempScales](s T, err error) T {
+	if err != nil {
+		panic(err)
+	}
+	return s
 }

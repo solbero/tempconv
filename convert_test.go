@@ -15,32 +15,32 @@ type convertTemp[T, S TempScales] struct {
 
 func TestConvertKelvinToCelsius(t *testing.T) {
 	kelvinToCelsiusCases := []convertTemp[*Kelvin, *Celsius]{
-		{new(Kelvin).Init(0), new(Celsius), -273.15},
-		{new(Kelvin).Init(273.15), new(Celsius), 0.0},
+		{mustInit(new(Kelvin).Init(0)), new(Celsius), -273.15},
+		{mustInit(new(Kelvin).Init(273.15)), new(Celsius), 0.0},
 	}
 	assertConvert(t, kelvinToCelsiusCases)
 }
 
 func TestConvertCelsiusToKelvin(t *testing.T) {
 	celsiusToKelvinCases := []convertTemp[*Celsius, *Kelvin]{
-		{new(Celsius).Init(0), new(Kelvin), 273.15},
-		{new(Celsius).Init(-273.15), new(Kelvin), 0.0},
+		{mustInit(new(Celsius).Init(0)), new(Kelvin), 273.15},
+		{mustInit(new(Celsius).Init(-273.15)), new(Kelvin), 0.0},
 	}
 	assertConvert(t, celsiusToKelvinCases)
 }
 
 func TestConvertKelvinToFahrenheit(t *testing.T) {
 	kelvinToFahrenheitCases := []convertTemp[*Kelvin, *Fahrenheit]{
-		{new(Kelvin).Init(0), new(Fahrenheit), -459.67},
-		{new(Kelvin).Init(255.3722222222222), new(Fahrenheit), 0},
+		{mustInit(new(Kelvin).Init(0)), new(Fahrenheit), -459.67},
+		{mustInit(new(Kelvin).Init(255.3722222222222)), new(Fahrenheit), 0},
 	}
 	assertConvert(t, kelvinToFahrenheitCases)
 }
 
 func TestConvertFahrenheitToKelvin(t *testing.T) {
 	fahrenheitToKelvinCases := []convertTemp[*Fahrenheit, *Kelvin]{
-		{new(Fahrenheit).Init(0), new(Kelvin), 255.3722222222222},
-		{new(Fahrenheit).Init(-459.67), new(Kelvin), 0},
+		{mustInit(new(Fahrenheit).Init(0)), new(Kelvin), 255.3722222222222},
+		{mustInit(new(Fahrenheit).Init(-459.67)), new(Kelvin), 0},
 	}
 	assertConvert(t, fahrenheitToKelvinCases)
 }
