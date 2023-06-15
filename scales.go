@@ -48,8 +48,8 @@ func (k *Kelvin) toKelvin() float64 {
 	return k.temp
 }
 
-func (k *Kelvin) fromKelvin(t float64) {
-	k.Init(t)
+func (k *Kelvin) fromKelvin(t float64) (*Kelvin, error) {
+	return k.Init(t)
 }
 
 type Celsius struct {
@@ -70,8 +70,8 @@ func (c *Celsius) toKelvin() float64 {
 	return c.temp + 273.15
 }
 
-func (c *Celsius) fromKelvin(t float64) {
-	c.Init(t - 273.15)
+func (c *Celsius) fromKelvin(t float64) (*Celsius, error) {
+	return c.Init(t - 273.15)
 }
 
 type Fahrenheit struct {
@@ -92,8 +92,9 @@ func (f *Fahrenheit) toKelvin() float64 {
 	return (f.temp + 459.67) * 5 / 9
 }
 
-func (f *Fahrenheit) fromKelvin(t float64) {
-	f.Init((t*9 - 459.67*5) / 5)
+func (f *Fahrenheit) fromKelvin(t float64) (*Fahrenheit, error) {
+	return f.Init((t*9 - 459.67*5) / 5)
+}
 
 func absoluteZeroError(temp, zero float64) error {
 	return fmt.Errorf("tempconv: input temperature %g is less than absolute zero %g", temp, absoluteZeroC)

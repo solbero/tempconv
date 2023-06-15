@@ -1,14 +1,12 @@
 package tempconv
 
-type Converter interface {
+type Converter[T TempScales] interface {
 	TempScales
 	toKelvin() float64
-	fromKelvin(float64)
+	fromKelvin(float64) (T, error)
 }
 
-func Convert[T, S Converter](input T, output S) S {
+func Convert[T Converter[T], S Converter[S]](input T, output S) (S, error) {
 	temp := input.toKelvin()
-	output.fromKelvin(temp)
-	return output
-
+	return output.fromKelvin(temp)
 }

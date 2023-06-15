@@ -45,9 +45,14 @@ func TestConvertFahrenheitToKelvin(t *testing.T) {
 	assertConvert(t, fahrenheitToKelvinCases)
 }
 
-func assertConvert[T, S Converter](t *testing.T, cases []convertTemp[T, S]) {
+func assertConvert[T Converter[T], S Converter[S]](t *testing.T, cases []convertTemp[T, S]) {
 	t.Helper()
 	for _, c := range cases {
+		out, err := Convert(c.input, c.output)
+		if err != nil {
+			t.Fatalf("got %v want none", err)
+		}
+
 		got, err := out.Temp()
 		if err != nil {
 			t.Fatalf("got %v want none", err)
