@@ -8,6 +8,32 @@ const (
 	absoluteZeroF float64 = -459.67
 )
 
+type AbsoluteZeroError struct {
+}
+
+func (e AbsoluteZeroError) Error() string {
+	return "temperature is below absolute zero"
+}
+
+type TempScale interface {
+	Name() string
+	Temp() float64
+	SetTemp(float64) error
+	Unit() string
+}
+
+func NewKelvin() *kelvin {
+	return &kelvin{baseScale{name: "kelvin", unit: "K"}}
+}
+
+func NewCelsius() *celsius {
+	return &celsius{baseScale{name: "celsius", unit: "°C"}}
+}
+
+func NewFahrenheit() *fahrenheit {
+	return &fahrenheit{baseScale{name: "fahrenheit", unit: "°F"}}
+}
+
 type baseScale struct {
 	name string
 	temp float64
@@ -18,84 +44,50 @@ func (b baseScale) String() string {
 	return fmt.Sprintf("%g %v", b.temp, b.unit)
 }
 
-func (b *baseScale) Temp() (float64, error) {
-	if b.name == "" || b.unit == "" {
-		return 0, fmt.Errorf("tempconv: %T is not initalized", b)
-	}
-	return b.temp, nil
+func (b *baseScale) Temp() float64 {
+	return b.temp
 }
 
-type TempScales interface {
-	*Kelvin | *Celsius | *Fahrenheit
-	Temp() (float64, error)
+func (b *baseScale) Unit() string {
+	return b.unit
 }
 
-type Kelvin struct {
+func (b *baseScale) Name() string {
+	return b.name
+}
+
+type kelvin struct {
 	baseScale
 }
 
-func (k *Kelvin) Init(t float64) (*Kelvin, error) {
-	n := "Kelvin"
-	u := "K"
+func (k *kelvin) SetTemp(t float64) error {
 	if t < absoluteZeroK {
-		return nil, absoluteZeroError(t, absoluteZeroK)
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
 	}
-	k.name, k.temp, k.unit = n, t, u
-	return k, nil
+	k.temp = t
+	return nil
 }
 
-func (k *Kelvin) toKelvin() float64 {
-	return k.temp
-}
-
-func (k *Kelvin) fromKelvin(t float64) (*Kelvin, error) {
-	return k.Init(t)
-}
-
-type Celsius struct {
+type celsius struct {
 	baseScale
 }
 
-func (c *Celsius) Init(t float64) (*Celsius, error) {
-	n := "Celsius"
-	u := "°C"
+func (c *celsius) SetTemp(t float64) error {
 	if t < absoluteZeroC {
-		return nil, absoluteZeroError(t, absoluteZeroC)
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
 	}
-	c.name, c.temp, c.unit = n, t, u
-	return c, nil
+	c.temp = t
+	return nil
 }
 
-func (c *Celsius) toKelvin() float64 {
-	return c.temp + 273.15
-}
-
-func (c *Celsius) fromKelvin(t float64) (*Celsius, error) {
-	return c.Init(t - 273.15)
-}
-
-type Fahrenheit struct {
+type fahrenheit struct {
 	baseScale
 }
 
-func (f *Fahrenheit) Init(t float64) (*Fahrenheit, error) {
-	n := "Fahrenheit"
-	u := "°F"
+func (f *fahrenheit) SetTemp(t float64) error {
 	if t < absoluteZeroF {
-		return nil, absoluteZeroError(t, absoluteZeroF)
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
 	}
-	f.name, f.temp, f.unit = n, t, u
-	return f, nil
-}
-
-func (f *Fahrenheit) toKelvin() float64 {
-	return (f.temp + 459.67) * 5 / 9
-}
-
-func (f *Fahrenheit) fromKelvin(t float64) (*Fahrenheit, error) {
-	return f.Init((t*9 - 459.67*5) / 5)
-}
-
-func absoluteZeroError(temp, zero float64) error {
-	return fmt.Errorf("tempconv: input temperature %g is less than absolute zero %g", temp, absoluteZeroC)
+	f.temp = t
+	return nil
 }

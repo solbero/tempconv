@@ -1,85 +1,128 @@
 package tempconv
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
 
-type stringTemp[T TempScales] struct {
-	temp T
-	want string
-}
+func TestFactory(t *testing.T) {
+	cases := []struct {
+		tempscale TempScale
+		want      string
+	}{
+		{NewKelvin(), "0 K"},
+		{NewCelsius(), "0 °C"},
+		{NewFahrenheit(), "0 °F"},
+	}
 
-func TestTempString(t *testing.T) {
-	kelvinCases := []stringTemp[*Kelvin]{
-		{mustInit(new(Kelvin).Init(0)), "0 K"},
-		{mustInit(new(Kelvin).Init(0.0)), "0 K"},
-		{mustInit(new(Kelvin).Init(.0)), "0 K"},
-	}
-	assertString(t, kelvinCases)
-
-	celsiusCases := []stringTemp[*Celsius]{
-		{mustInit(new(Celsius).Init(0)), "0 °C"},
-		{mustInit(new(Celsius).Init(0.0)), "0 °C"},
-		{mustInit(new(Celsius).Init(.0)), "0 °C"},
-	}
-	assertString(t, celsiusCases)
-
-	fahrenheitCases := []stringTemp[*Fahrenheit]{
-		{mustInit(new(Fahrenheit).Init(0)), "0 °F"},
-		{mustInit(new(Fahrenheit).Init(0.0)), "0 °F"},
-		{mustInit(new(Fahrenheit).Init(.0)), "0 °F"},
-	}
-	assertString(t, fahrenheitCases)
-}
-
-func TestInitError(t *testing.T) {
-	k := new(Kelvin)
-	c := new(Celsius)
-	f := new(Fahrenheit)
-
-	if _, err := k.Temp(); err == nil {
-		t.Errorf("got %v want error", err)
-	}
-	if _, err := c.Temp(); err == nil {
-		t.Errorf("got %v want error", err)
-	}
-	if _, err := f.Temp(); err == nil {
-		t.Errorf("got %v want error", err)
-	}
-}
-
-func TestAbsoluteZeroError(t *testing.T) {
-	k := new(Kelvin)
-	c := new(Celsius)
-	f := new(Fahrenheit)
-
-	if _, err := k.Init(absoluteZeroK - 1); err == nil {
-		t.Errorf("got %v want error", err)
-	}
-	if _, err := c.Init(absoluteZeroC - 1); err == nil {
-		t.Errorf("got %v want error", err)
-	}
-	if _, err := f.Init(absoluteZeroF - 1); err == nil {
-		t.Errorf("got %v want error", err)
-	}
-}
-
-func assertString[T TempScales](t *testing.T, cases []stringTemp[T]) {
-	t.Helper()
 	for _, c := range cases {
-		got := fmt.Sprint(c.temp)
-		want := c.want
+		got := fmt.Sprint(c.tempscale)
 
-		if got != want {
-			t.Errorf("got %v want %v", got, want)
+		if got != c.want {
+			t.Errorf("got %v want %v", got, c.want)
 		}
 	}
 }
 
-func mustInit[T TempScales](s T, err error) T {
-	if err != nil {
-		panic(err)
+func TestName(t *testing.T) {
+	cases := []struct {
+		tempscale TempScale
+		want      string
+	}{
+		{NewKelvin(), "kelvin"},
+		{NewCelsius(), "celsius"},
+		{NewFahrenheit(), "fahrenheit"},
 	}
-	return s
+
+	for _, c := range cases {
+		got := c.tempscale.Name()
+
+		if got != c.want {
+			t.Errorf("got %v want %v", got, c.want)
+		}
+	}
+}
+
+func TestTemp(t *testing.T) {
+	cases := []struct {
+		tempscale TempScale
+		want      float64
+	}{
+		{NewKelvin(), 0},
+		{NewCelsius(), 0},
+		{NewFahrenheit(), 0},
+	}
+
+	for _, c := range cases {
+		got := c.tempscale.Temp()
+
+		if got != c.want {
+			t.Errorf("got %v want %v", got, c.want)
+		}
+	}
+}
+
+func TestSetTemp(t *testing.T) {
+	cases := []struct {
+		tempscale TempScale
+		temp      float64
+		want      string
+	}{
+		{NewKelvin(), 100, "100 K"},
+		{NewCelsius(), 100, "100 °C"},
+		{NewFahrenheit(), 100, "100 °F"},
+	}
+
+	for _, c := range cases {
+		err := c.tempscale.SetTemp(c.temp)
+		if err != nil {
+			t.Errorf("got %v want nil", err)
+		}
+
+		got := fmt.Sprint(c.tempscale)
+
+		if got != c.want {
+			t.Errorf("got %v want %v", got, c.want)
+		}
+	}
+}
+
+func TestUnit(t *testing.T) {
+	cases := []struct {
+		tempscale TempScale
+		want      string
+	}{
+		{NewKelvin(), "K"},
+		{NewCelsius(), "°C"},
+		{NewFahrenheit(), "°F"},
+	}
+
+	for _, c := range cases {
+		got := c.tempscale.Unit()
+
+		if got != c.want {
+			t.Errorf("got %v want %v", got, c.want)
+		}
+	}
+}
+
+func TestAbsoluteZeroError(t *testing.T) {
+	cases := []struct {
+		tempscale TempScale
+		temp      float64
+	}{
+		{NewKelvin(), absoluteZeroK - 1},
+		{NewCelsius(), absoluteZeroC - 1},
+		{NewFahrenheit(), absoluteZeroF - 1},
+	}
+
+	for _, c := range cases {
+		err := c.tempscale.SetTemp(c.temp)
+		var target *AbsoluteZeroError
+
+		if !errors.As(err, &target) {
+			t.Errorf("got %T want %T", err, target)
+		}
+	}
 }

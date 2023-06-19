@@ -7,60 +7,62 @@ import (
 
 const float64EqualityThreshold = 1e-9
 
-type convertTemp[T, S TempScales] struct {
-	input  T
-	output S
+type conversionCases struct {
+	input  TempScale
+	temp   float64
+	output TempScale
 	want   float64
 }
 
-func TestConvertKelvinToCelsius(t *testing.T) {
-	kelvinToCelsiusCases := []convertTemp[*Kelvin, *Celsius]{
-		{mustInit(new(Kelvin).Init(0)), new(Celsius), -273.15},
-		{mustInit(new(Kelvin).Init(273.15)), new(Celsius), 0.0},
+func TestKelvinToCelsius(t *testing.T) {
+	cases := []conversionCases{
+		{NewKelvin(), 0, NewCelsius(), -273.15},
+		{NewKelvin(), 273.15, NewCelsius(), 0.0},
 	}
-	assertConvert(t, kelvinToCelsiusCases)
+	assertConversion(t, cases)
 }
 
-func TestConvertCelsiusToKelvin(t *testing.T) {
-	celsiusToKelvinCases := []convertTemp[*Celsius, *Kelvin]{
-		{mustInit(new(Celsius).Init(0)), new(Kelvin), 273.15},
-		{mustInit(new(Celsius).Init(-273.15)), new(Kelvin), 0.0},
+func TestCelsiusToKelvin(t *testing.T) {
+	celsiusToKelvinCases := []conversionCases{
+		{NewCelsius(), 0, NewKelvin(), 273.15},
+		{NewCelsius(), -273.15, NewKelvin(), 0.0},
 	}
-	assertConvert(t, celsiusToKelvinCases)
+	assertConversion(t, celsiusToKelvinCases)
 }
 
-func TestConvertKelvinToFahrenheit(t *testing.T) {
-	kelvinToFahrenheitCases := []convertTemp[*Kelvin, *Fahrenheit]{
-		{mustInit(new(Kelvin).Init(0)), new(Fahrenheit), -459.67},
-		{mustInit(new(Kelvin).Init(255.3722222222222)), new(Fahrenheit), 0},
+func TestKelvinToFahrenheit(t *testing.T) {
+	kelvinToFahrenheitCases := []conversionCases{
+		{NewKelvin(), 0, NewFahrenheit(), -459.67},
+		{NewKelvin(), 255.3722222222222, NewFahrenheit(), 0},
 	}
-	assertConvert(t, kelvinToFahrenheitCases)
+	assertConversion(t, kelvinToFahrenheitCases)
 }
 
-func TestConvertFahrenheitToKelvin(t *testing.T) {
-	fahrenheitToKelvinCases := []convertTemp[*Fahrenheit, *Kelvin]{
-		{mustInit(new(Fahrenheit).Init(0)), new(Kelvin), 255.3722222222222},
-		{mustInit(new(Fahrenheit).Init(-459.67)), new(Kelvin), 0},
+func TestFahrenheitToKelvin(t *testing.T) {
+	fahrenheitToKelvinCases := []conversionCases{
+		{NewFahrenheit(), 0, NewKelvin(), 255.3722222222222},
+		{NewFahrenheit(), -459.67, NewKelvin(), 0},
 	}
-	assertConvert(t, fahrenheitToKelvinCases)
+	assertConversion(t, fahrenheitToKelvinCases)
 }
 
-func assertConvert[T Converter[T], S Converter[S]](t *testing.T, cases []convertTemp[T, S]) {
+func assertConversion(t *testing.T, cases []conversionCases) {
 	t.Helper()
 	for _, c := range cases {
-		out, err := Convert(c.input, c.output)
+		err := c.input.SetTemp(c.temp)
 		if err != nil {
-			t.Fatalf("got %v want none", err)
+			t.Errorf("got %v want %v", err, nil)
 		}
 
-		got, err := out.Temp()
+		err = Convert(c.input, c.output)
 		if err != nil {
-			t.Fatalf("got %v want none", err)
+			t.Errorf("got %v want %v", err, nil)
 		}
-		want := c.want
 
-		if !assertAlmostEqual(got, want, float64EqualityThreshold) {
-			t.Errorf("got %v want %v", got, want)
+		got := c.output.Temp()
+
+		if !assertAlmostEqual(got, c.want, float64EqualityThreshold) {
+			t.Errorf("got %v want %v", got, c.want)
 		}
 	}
 }
