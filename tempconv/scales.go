@@ -8,6 +8,7 @@ const (
 	absoluteZeroF float64 = -459.67
 )
 
+// AbsoluteZeroError is an error type for temperatures below absolute zero.
 type AbsoluteZeroError struct {
 }
 
@@ -15,6 +16,7 @@ func (e AbsoluteZeroError) Error() string {
 	return "temperature is below absolute zero"
 }
 
+// TempScale is an interface for temperature scales.
 type TempScale interface {
 	Name() string
 	Temp() float64
@@ -22,14 +24,17 @@ type TempScale interface {
 	Unit() string
 }
 
+// NewKelvin returns a new Kelvin scale.
 func NewKelvin() *kelvin {
 	return &kelvin{baseScale{name: "kelvin", unit: "K"}}
 }
 
+// NewCelsius returns a new Celsius scale.
 func NewCelsius() *celsius {
 	return &celsius{baseScale{name: "celsius", unit: "°C"}}
 }
 
+// NewFahrenheit returns a new Fahrenheit scale.
 func NewFahrenheit() *fahrenheit {
 	return &fahrenheit{baseScale{name: "fahrenheit", unit: "°F"}}
 }

@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// InvalidConversionError is an error type for invalid temperature conversions.
 type InvalidConversionError struct {
 	input  TempScale
 	output TempScale
@@ -14,6 +15,8 @@ func (e InvalidConversionError) Error() string {
 	return fmt.Sprintf("invalid conversion from '%v' to '%v'", e.input.Name(), e.output.Name())
 }
 
+// Convert converts a temperature from a temperature scale to another.
+// It returns an error if the conversion is not possible.
 func Convert(input, output TempScale) error {
 	k := NewKelvin()
 	var err error
