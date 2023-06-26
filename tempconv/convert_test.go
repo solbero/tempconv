@@ -46,6 +46,86 @@ func TestFahrenheitToKelvin(t *testing.T) {
 	assertConversion(t, fahrenheitToKelvinCases)
 }
 
+func TestKelvinToRankine(t *testing.T) {
+	kelvinToRankineCases := []conversionCases{
+		{NewKelvin(), 0, NewRankine(), 0},
+		{NewKelvin(), 273.15, NewRankine(), 491.67},
+	}
+	assertConversion(t, kelvinToRankineCases)
+}
+
+func TestRankineToKelvin(t *testing.T) {
+	rankineToKelvinCases := []conversionCases{
+		{NewRankine(), 0, NewKelvin(), 0},
+		{NewRankine(), 491.67, NewKelvin(), 273.15},
+	}
+	assertConversion(t, rankineToKelvinCases)
+}
+
+func TestKelvinToDelisle(t *testing.T) {
+	kelvinToDelisleCases := []conversionCases{
+		{NewKelvin(), 0, NewDelisle(), 559.725},
+		{NewKelvin(), 373.15, NewDelisle(), 0},
+	}
+	assertConversion(t, kelvinToDelisleCases)
+}
+
+func TestDelisleToKelvin(t *testing.T) {
+	delisleToKelvinCases := []conversionCases{
+		{NewDelisle(), 0, NewKelvin(), 373.15},
+		{NewDelisle(), 559.725, NewKelvin(), 0},
+	}
+	assertConversion(t, delisleToKelvinCases)
+}
+
+func TestKelvinToNewton(t *testing.T) {
+	kelvinToNewtonCases := []conversionCases{
+		{NewKelvin(), 0, NewNewton(), -90.1395},
+		{NewKelvin(), 273.15, NewNewton(), 0},
+	}
+	assertConversion(t, kelvinToNewtonCases)
+}
+
+func TestNewtonToKelvin(t *testing.T) {
+	newtonToKelvinCases := []conversionCases{
+		{NewNewton(), 0, NewKelvin(), 273.15},
+		{NewNewton(), -90.1395, NewKelvin(), 0},
+	}
+	assertConversion(t, newtonToKelvinCases)
+}
+
+func TestKelvinToReaumur(t *testing.T) {
+	kelvinToReaumurCases := []conversionCases{
+		{NewKelvin(), 0, NewReaumur(), -218.52},
+		{NewKelvin(), 273.15, NewReaumur(), 0},
+	}
+	assertConversion(t, kelvinToReaumurCases)
+}
+
+func TestReaumurToKelvin(t *testing.T) {
+	reaumurToKelvinCases := []conversionCases{
+		{NewReaumur(), 0, NewKelvin(), 273.15},
+		{NewReaumur(), -218.52, NewKelvin(), 0},
+	}
+	assertConversion(t, reaumurToKelvinCases)
+}
+
+func TestKelvinToRoemer(t *testing.T) {
+	kelvinToRoemerCases := []conversionCases{
+		{NewKelvin(), 0, NewRoemer(), -135.90375},
+		{NewKelvin(), 258.8642857142857, NewRoemer(), 0},
+	}
+	assertConversion(t, kelvinToRoemerCases)
+}
+
+func TestRoemerToKelvin(t *testing.T) {
+	roemerToKelvinCases := []conversionCases{
+		{NewRoemer(), 0, NewKelvin(), 258.8642857142857},
+		{NewRoemer(), -135.90375, NewKelvin(), 0},
+	}
+	assertConversion(t, roemerToKelvinCases)
+}
+
 func assertConversion(t *testing.T, cases []conversionCases) {
 	t.Helper()
 	for _, c := range cases {

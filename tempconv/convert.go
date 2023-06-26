@@ -20,18 +20,16 @@ func (e InvalidConversionError) Error() string {
 func Convert(input, output TempScale) error {
 	k := NewKelvin()
 	var err error
-	err = kelvinFrom(k, input)
-	if err != nil {
+	if err = kelvinFrom(input, k); err != nil {
 		return err
 	}
-	err = scaleFrom(k, output)
-	if err != nil {
+	if err = kelvinTo(output, k); err != nil {
 		return err
 	}
-	return err
+	return nil
 }
 
-func kelvinFrom(k *kelvin, ts TempScale) error {
+func kelvinFrom(ts TempScale, k *kelvin) error {
 	var t float64
 	switch ts.(type) {
 	case *kelvin:
@@ -39,15 +37,24 @@ func kelvinFrom(k *kelvin, ts TempScale) error {
 	case *celsius:
 		t = ts.Temp() + math.Abs(absoluteZeroC)
 	case *fahrenheit:
-		t = (ts.Temp() + math.Abs(absoluteZeroF)) * 5 / 9
+		t = (ts.Temp()*5 + math.Abs(absoluteZeroF)*5) / 9
+	case *rankine:
+		t = ts.Temp() * 5 / 9
+	case *delisle:
+		t = (373.15*3 - ts.Temp()*2) / 3
+	case *newton:
+		t = (ts.Temp()*100 + math.Abs(absoluteZeroC)*33) / 33
+	case *reaumur:
+		t = (ts.Temp()*5 + math.Abs(absoluteZeroC)*4) / 4
+	case *roemer:
+		t = (ts.Temp()*40 - 7.5*40 + math.Abs(absoluteZeroC)*21) / 21
 	default:
 		return fmt.Errorf("tempconv: %w", &InvalidConversionError{input: ts, output: k})
 	}
-	mustSetTemp(k, t)
-	return nil
+	return k.SetTemp(t)
 }
 
-func scaleFrom(k *kelvin, ts TempScale) error {
+func kelvinTo(ts TempScale, k *kelvin) error {
 	var t float64
 	switch ts.(type) {
 	case *kelvin:
@@ -56,16 +63,18 @@ func scaleFrom(k *kelvin, ts TempScale) error {
 		t = k.Temp() - math.Abs(absoluteZeroC)
 	case *fahrenheit:
 		t = (k.Temp()*9 - math.Abs(absoluteZeroF)*5) / 5
+	case *rankine:
+		t = k.Temp() * 9 / 5
+	case *delisle:
+		t = (373.15 - k.Temp()) * 3 / 2
+	case *newton:
+		t = (k.Temp()*33 - math.Abs(absoluteZeroC)*33) / 100
+	case *reaumur:
+		t = (k.Temp()*4 - math.Abs(absoluteZeroC)*4) / 5
+	case *roemer:
+		t = ((k.Temp()*21 - math.Abs(absoluteZeroC)*21) + 7.5*40) / 40
 	default:
 		return fmt.Errorf("tempconv: %w", &InvalidConversionError{input: k, output: ts})
 	}
-	mustSetTemp(ts, t)
-	return nil
-}
-
-func mustSetTemp(ts TempScale, t float64) {
-	err := ts.SetTemp(t)
-	if err != nil {
-		panic(err)
-	}
+	return ts.SetTemp(t)
 }

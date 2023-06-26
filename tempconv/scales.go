@@ -3,9 +3,14 @@ package tempconv
 import "fmt"
 
 const (
-	absoluteZeroK float64 = 0.0
-	absoluteZeroC float64 = -273.15
-	absoluteZeroF float64 = -459.67
+	absoluteZeroK  float64 = 0.0
+	absoluteZeroC  float64 = -273.15
+	absoluteZeroF  float64 = -459.67
+	absoluteZeroR  float64 = 0.0
+	absoluteZeroDe float64 = 559.725
+	absoluteZeroN  float64 = -90.1395
+	absoluteZeroRé float64 = -218.52
+	absolutezeroRø float64 = -135.90375
 )
 
 // AbsoluteZeroError is an error type for temperatures below absolute zero.
@@ -39,8 +44,34 @@ func NewFahrenheit() *fahrenheit {
 	return &fahrenheit{baseScale{name: "fahrenheit", unit: "°F"}}
 }
 
+// NewRankine returns a new Rankine scale.
+func NewRankine() *rankine {
+	return &rankine{baseScale{name: "rankine", unit: "°R"}}
+}
+
+// NewDelisle returns a new Delisle scale.
+func NewDelisle() *delisle {
+	return &delisle{baseScale{name: "delisle", unit: "°De"}}
+}
+
+// NewNewton returns a new Newton scale.
+func NewNewton() *newton {
+	return &newton{baseScale{name: "newton", unit: "°N"}}
+}
+
+// NewReaumur returns a new Réaumur scale.
+func NewReaumur() *reaumur {
+	return &reaumur{baseScale{name: "réaumur", alts: []string{"reaumur"}, unit: "°Ré"}}
+}
+
+// NewRoemer returns a new Rømer scale.
+func NewRoemer() *roemer {
+	return &roemer{baseScale{name: "rømer", alts: []string{"roemer", "romer"}, unit: "°Rø"}}
+}
+
 type baseScale struct {
 	name string
+	alts []string
 	temp float64
 	unit string
 }
@@ -94,5 +125,65 @@ func (f *fahrenheit) SetTemp(t float64) error {
 		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
 	}
 	f.temp = t
+	return nil
+}
+
+type rankine struct {
+	baseScale
+}
+
+func (r *rankine) SetTemp(t float64) error {
+	if t < absoluteZeroR {
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	}
+	r.temp = t
+	return nil
+}
+
+type delisle struct {
+	baseScale
+}
+
+func (d *delisle) SetTemp(t float64) error {
+	if t > absoluteZeroDe {
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	}
+	d.temp = t
+	return nil
+}
+
+type newton struct {
+	baseScale
+}
+
+func (n *newton) SetTemp(t float64) error {
+	if t < absoluteZeroN {
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	}
+	n.temp = t
+	return nil
+}
+
+type reaumur struct {
+	baseScale
+}
+
+func (r *reaumur) SetTemp(t float64) error {
+	if t < absoluteZeroRé {
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	}
+	r.temp = t
+	return nil
+}
+
+type roemer struct {
+	baseScale
+}
+
+func (r *roemer) SetTemp(t float64) error {
+	if t < absolutezeroRø {
+		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	}
+	r.temp = t
 	return nil
 }

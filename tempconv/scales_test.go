@@ -14,6 +14,11 @@ func TestFactory(t *testing.T) {
 		{NewKelvin(), "0 K"},
 		{NewCelsius(), "0 °C"},
 		{NewFahrenheit(), "0 °F"},
+		{NewRankine(), "0 °R"},
+		{NewDelisle(), "0 °De"},
+		{NewNewton(), "0 °N"},
+		{NewReaumur(), "0 °Ré"},
+		{NewRoemer(), "0 °Rø"},
 	}
 
 	for _, c := range cases {
@@ -33,6 +38,11 @@ func TestName(t *testing.T) {
 		{NewKelvin(), "kelvin"},
 		{NewCelsius(), "celsius"},
 		{NewFahrenheit(), "fahrenheit"},
+		{NewRankine(), "rankine"},
+		{NewDelisle(), "delisle"},
+		{NewNewton(), "newton"},
+		{NewReaumur(), "réaumur"},
+		{NewRoemer(), "rømer"},
 	}
 
 	for _, c := range cases {
@@ -52,6 +62,11 @@ func TestTemp(t *testing.T) {
 		{NewKelvin(), 0},
 		{NewCelsius(), 0},
 		{NewFahrenheit(), 0},
+		{NewRankine(), 0},
+		{NewDelisle(), 0},
+		{NewNewton(), 0},
+		{NewReaumur(), 0},
+		{NewRoemer(), 0},
 	}
 
 	for _, c := range cases {
@@ -72,6 +87,11 @@ func TestSetTemp(t *testing.T) {
 		{NewKelvin(), 100, "100 K"},
 		{NewCelsius(), 100, "100 °C"},
 		{NewFahrenheit(), 100, "100 °F"},
+		{NewRankine(), 100, "100 °R"},
+		{NewDelisle(), 100, "100 °De"},
+		{NewNewton(), 100, "100 °N"},
+		{NewReaumur(), 100, "100 °Ré"},
+		{NewRoemer(), 100, "100 °Rø"},
 	}
 
 	for _, c := range cases {
@@ -96,6 +116,11 @@ func TestUnit(t *testing.T) {
 		{NewKelvin(), "K"},
 		{NewCelsius(), "°C"},
 		{NewFahrenheit(), "°F"},
+		{NewRankine(), "°R"},
+		{NewDelisle(), "°De"},
+		{NewNewton(), "°N"},
+		{NewReaumur(), "°Ré"},
+		{NewRoemer(), "°Rø"},
 	}
 
 	for _, c := range cases {
@@ -115,6 +140,11 @@ func TestAbsoluteZeroError(t *testing.T) {
 		{NewKelvin(), absoluteZeroK - 1},
 		{NewCelsius(), absoluteZeroC - 1},
 		{NewFahrenheit(), absoluteZeroF - 1},
+		{NewRankine(), absoluteZeroR - 1},
+		{NewDelisle(), absoluteZeroDe + 1},
+		{NewNewton(), absoluteZeroN - 1},
+		{NewReaumur(), absoluteZeroRé - 1},
+		{NewRoemer(), absolutezeroRø - 1},
 	}
 
 	for _, c := range cases {
