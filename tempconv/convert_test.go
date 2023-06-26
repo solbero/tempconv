@@ -5,8 +5,6 @@ import (
 	"testing"
 )
 
-const float64EqualityThreshold = 1e-9
-
 type conversionCases struct {
 	input  TempScale
 	temp   float64
@@ -141,7 +139,7 @@ func assertConversion(t *testing.T, cases []conversionCases) {
 
 		got := c.output.Temp()
 
-		if !assertAlmostEqual(got, c.want, float64EqualityThreshold) {
+		if !assertAlmostEqual(got, c.want, equalityThresholdFloat64) {
 			t.Errorf("got %v want %v", got, c.want)
 		}
 	}

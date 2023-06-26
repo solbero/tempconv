@@ -1,6 +1,11 @@
 package tempconv
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
+
+const equalityThresholdFloat64 = 1e-12
 
 const (
 	absoluteZeroK  float64 = 0.0
@@ -15,10 +20,12 @@ const (
 
 // AbsoluteZeroError is an error type for temperatures below absolute zero.
 type AbsoluteZeroError struct {
+	Temp float64
+	Zero float64
 }
 
 func (e AbsoluteZeroError) Error() string {
-	return "temperature is below absolute zero"
+	return fmt.Sprintf("temperature %g is below absolute zero %g", e.Temp, e.Zero)
 }
 
 // TempScale is an interface for temperature scales.
@@ -97,8 +104,9 @@ type kelvin struct {
 }
 
 func (k *kelvin) SetTemp(t float64) error {
-	if t < absoluteZeroK {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(t, absoluteZeroK)
+	if err != nil {
+		return err
 	}
 	k.temp = t
 	return nil
@@ -109,8 +117,9 @@ type celsius struct {
 }
 
 func (c *celsius) SetTemp(t float64) error {
-	if t < absoluteZeroC {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(t, absoluteZeroC)
+	if err != nil {
+		return err
 	}
 	c.temp = t
 	return nil
@@ -121,8 +130,9 @@ type fahrenheit struct {
 }
 
 func (f *fahrenheit) SetTemp(t float64) error {
-	if t < absoluteZeroF {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(t, absoluteZeroF)
+	if err != nil {
+		return err
 	}
 	f.temp = t
 	return nil
@@ -133,8 +143,9 @@ type rankine struct {
 }
 
 func (r *rankine) SetTemp(t float64) error {
-	if t < absoluteZeroR {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(t, absoluteZeroR)
+	if err != nil {
+		return err
 	}
 	r.temp = t
 	return nil
@@ -145,10 +156,11 @@ type delisle struct {
 }
 
 func (d *delisle) SetTemp(t float64) error {
-	if t > absoluteZeroDe {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(-t, -absoluteZeroDe) // Delisle scale is inverted
+	if err != nil {
+		return err
 	}
-	d.temp = t
+	d.temp = -t // Revert inversion
 	return nil
 }
 
@@ -157,8 +169,9 @@ type newton struct {
 }
 
 func (n *newton) SetTemp(t float64) error {
-	if t < absoluteZeroN {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(t, absoluteZeroN)
+	if err != nil {
+		return err
 	}
 	n.temp = t
 	return nil
@@ -169,8 +182,9 @@ type reaumur struct {
 }
 
 func (r *reaumur) SetTemp(t float64) error {
-	if t < absoluteZeroRé {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(t, absoluteZeroRé)
+	if err != nil {
+		return err
 	}
 	r.temp = t
 	return nil
@@ -181,9 +195,19 @@ type roemer struct {
 }
 
 func (r *roemer) SetTemp(t float64) error {
-	if t < absolutezeroRø {
-		return fmt.Errorf("tempconv: %w", &AbsoluteZeroError{})
+	t, err := checkAbsoluteZero(t, absolutezeroRø)
+	if err != nil {
+		return err
 	}
 	r.temp = t
 	return nil
+}
+
+func checkAbsoluteZero(t, zero float64) (float64, error) {
+	if math.Signbit(t) != math.Signbit(zero) && math.Abs(t-zero) < equalityThresholdFloat64 {
+		return zero, nil
+	} else if t < zero {
+		return 0, fmt.Errorf("tempconv: %w", &AbsoluteZeroError{t, zero})
+	}
+	return t, nil
 }

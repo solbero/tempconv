@@ -49,7 +49,7 @@ func kelvinFrom(ts TempScale, k *kelvin) error {
 	case *roemer:
 		t = (ts.Temp()*40 - 7.5*40 + math.Abs(absoluteZeroC)*21) / 21
 	default:
-		return fmt.Errorf("tempconv: %w", &InvalidConversionError{input: ts, output: k})
+		panic(fmt.Errorf("tempconv: %w", &InvalidConversionError{input: ts, output: k}))
 	}
 	return k.SetTemp(t)
 }
@@ -74,7 +74,7 @@ func kelvinTo(ts TempScale, k *kelvin) error {
 	case *roemer:
 		t = ((k.Temp()*21 - math.Abs(absoluteZeroC)*21) + 7.5*40) / 40
 	default:
-		return fmt.Errorf("tempconv: %w", &InvalidConversionError{input: k, output: ts})
+		panic(fmt.Errorf("tempconv: %w", &InvalidConversionError{input: k, output: ts}))
 	}
 	return ts.SetTemp(t)
 }
