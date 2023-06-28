@@ -17,19 +17,19 @@ func (e InvalidConversionError) Error() string {
 
 // Convert converts a temperature from a temperature scale to another.
 // It returns an error if the conversion is not possible.
-func Convert(input, output TempScale) error {
+func Convert(fromScale, toScale Scale) error {
 	k := NewKelvin()
 	var err error
-	if err = kelvinFrom(input, k); err != nil {
+	if err = kelvinFrom(fromScale, k); err != nil {
 		return err
 	}
-	if err = kelvinTo(output, k); err != nil {
+	if err = kelvinTo(toScale, k); err != nil {
 		return err
 	}
 	return nil
 }
 
-func kelvinFrom(ts TempScale, k *kelvin) error {
+func kelvinFrom(ts Scale, k *kelvin) error {
 	var t float64
 	switch ts.(type) {
 	case *kelvin:
@@ -54,7 +54,7 @@ func kelvinFrom(ts TempScale, k *kelvin) error {
 	return k.SetTemp(t)
 }
 
-func kelvinTo(ts TempScale, k *kelvin) error {
+func kelvinTo(ts Scale, k *kelvin) error {
 	var t float64
 	switch ts.(type) {
 	case *kelvin:

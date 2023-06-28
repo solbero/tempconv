@@ -8,7 +8,7 @@ import (
 
 func TestFactory(t *testing.T) {
 	cases := []struct {
-		tempscale TempScale
+		tempscale Scale
 		want      string
 	}{
 		{NewKelvin(), "0 K"},
@@ -18,7 +18,7 @@ func TestFactory(t *testing.T) {
 		{NewDelisle(), "0 °De"},
 		{NewNewton(), "0 °N"},
 		{NewReaumur(), "0 °Ré"},
-		{NewRoemer(), "0 °Rø"},
+		{NewRomer(), "0 °Rø"},
 	}
 
 	for _, c := range cases {
@@ -32,7 +32,7 @@ func TestFactory(t *testing.T) {
 
 func TestName(t *testing.T) {
 	cases := []struct {
-		tempscale TempScale
+		tempscale Scale
 		want      string
 	}{
 		{NewKelvin(), "kelvin"},
@@ -42,7 +42,7 @@ func TestName(t *testing.T) {
 		{NewDelisle(), "delisle"},
 		{NewNewton(), "newton"},
 		{NewReaumur(), "réaumur"},
-		{NewRoemer(), "rømer"},
+		{NewRomer(), "rømer"},
 	}
 
 	for _, c := range cases {
@@ -56,7 +56,7 @@ func TestName(t *testing.T) {
 
 func TestTemp(t *testing.T) {
 	cases := []struct {
-		tempscale TempScale
+		tempscale Scale
 		want      float64
 	}{
 		{NewKelvin(), 0},
@@ -66,7 +66,7 @@ func TestTemp(t *testing.T) {
 		{NewDelisle(), 0},
 		{NewNewton(), 0},
 		{NewReaumur(), 0},
-		{NewRoemer(), 0},
+		{NewRomer(), 0},
 	}
 
 	for _, c := range cases {
@@ -80,7 +80,7 @@ func TestTemp(t *testing.T) {
 
 func TestSetTemp(t *testing.T) {
 	cases := []struct {
-		tempscale TempScale
+		tempscale Scale
 		temp      float64
 		want      string
 	}{
@@ -91,7 +91,7 @@ func TestSetTemp(t *testing.T) {
 		{NewDelisle(), 100, "100 °De"},
 		{NewNewton(), 100, "100 °N"},
 		{NewReaumur(), 100, "100 °Ré"},
-		{NewRoemer(), 100, "100 °Rø"},
+		{NewRomer(), 100, "100 °Rø"},
 	}
 
 	for _, c := range cases {
@@ -110,7 +110,7 @@ func TestSetTemp(t *testing.T) {
 
 func TestUnit(t *testing.T) {
 	cases := []struct {
-		tempscale TempScale
+		tempscale Scale
 		want      string
 	}{
 		{NewKelvin(), "K"},
@@ -120,7 +120,7 @@ func TestUnit(t *testing.T) {
 		{NewDelisle(), "°De"},
 		{NewNewton(), "°N"},
 		{NewReaumur(), "°Ré"},
-		{NewRoemer(), "°Rø"},
+		{NewRomer(), "°Rø"},
 	}
 
 	for _, c := range cases {
@@ -134,7 +134,7 @@ func TestUnit(t *testing.T) {
 
 func TestAbsoluteZeroError(t *testing.T) {
 	cases := []struct {
-		tempscale TempScale
+		tempscale Scale
 		temp      float64
 	}{
 		{NewKelvin(), absoluteZeroK - 1},
@@ -144,7 +144,7 @@ func TestAbsoluteZeroError(t *testing.T) {
 		{NewDelisle(), absoluteZeroDe + 1},
 		{NewNewton(), absoluteZeroN - 1},
 		{NewReaumur(), absoluteZeroRé - 1},
-		{NewRoemer(), absolutezeroRø - 1},
+		{NewRomer(), absolutezeroRø - 1},
 	}
 
 	for _, c := range cases {

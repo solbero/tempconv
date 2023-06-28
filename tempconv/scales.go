@@ -24,13 +24,10 @@ type AbsoluteZeroError struct {
 	Zero float64
 }
 
-func (e AbsoluteZeroError) Error() string {
-	return fmt.Sprintf("temperature %g is below absolute zero %g", e.Temp, e.Zero)
-}
-
-// TempScale is an interface for temperature scales.
-type TempScale interface {
+// Scale is an interface for temperature scales.
+type Scale interface {
 	Name() string
+	Alias() string
 	Temp() float64
 	SetTemp(float64) error
 	Unit() string
@@ -68,19 +65,19 @@ func NewNewton() *newton {
 
 // NewReaumur returns a new Réaumur scale.
 func NewReaumur() *reaumur {
-	return &reaumur{baseScale{name: "réaumur", alts: []string{"reaumur"}, unit: "°Ré"}}
+	return &reaumur{baseScale{name: "réaumur", alias: "reaumur", unit: "°Ré"}}
 }
 
-// NewRoemer returns a new Rømer scale.
-func NewRoemer() *roemer {
-	return &roemer{baseScale{name: "rømer", alts: []string{"roemer", "romer"}, unit: "°Rø"}}
+// NewRomer returns a new Rømer scale.
+func NewRomer() *roemer {
+	return &roemer{baseScale{name: "rømer", alias: "romer", unit: "°Rø"}}
 }
 
 type baseScale struct {
-	name string
-	alts []string
-	temp float64
-	unit string
+	name  string
+	alias string
+	temp  float64
+	unit  string
 }
 
 func (b baseScale) String() string {
@@ -97,6 +94,10 @@ func (b *baseScale) Unit() string {
 
 func (b *baseScale) Name() string {
 	return b.name
+}
+
+func (b *baseScale) Alias() string {
+	return b.alias
 }
 
 type kelvin struct {

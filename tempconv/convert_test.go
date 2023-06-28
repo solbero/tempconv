@@ -6,9 +6,9 @@ import (
 )
 
 type conversionCases struct {
-	input  TempScale
+	input  Scale
 	temp   float64
-	output TempScale
+	output Scale
 	want   float64
 }
 
@@ -110,16 +110,16 @@ func TestReaumurToKelvin(t *testing.T) {
 
 func TestKelvinToRoemer(t *testing.T) {
 	kelvinToRoemerCases := []conversionCases{
-		{NewKelvin(), 0, NewRoemer(), -135.90375},
-		{NewKelvin(), 258.8642857142857, NewRoemer(), 0},
+		{NewKelvin(), 0, NewRomer(), -135.90375},
+		{NewKelvin(), 258.8642857142857, NewRomer(), 0},
 	}
 	assertConversion(t, kelvinToRoemerCases)
 }
 
 func TestRoemerToKelvin(t *testing.T) {
 	roemerToKelvinCases := []conversionCases{
-		{NewRoemer(), 0, NewKelvin(), 258.8642857142857},
-		{NewRoemer(), -135.90375, NewKelvin(), 0},
+		{NewRomer(), 0, NewKelvin(), 258.8642857142857},
+		{NewRomer(), -135.90375, NewKelvin(), 0},
 	}
 	assertConversion(t, roemerToKelvinCases)
 }
