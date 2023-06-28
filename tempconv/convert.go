@@ -1,18 +1,22 @@
 package tempconv
 
 import (
+	"errors"
 	"fmt"
 	"math"
 )
 
+var ErrScaleNotSupported = errors.New("scale not supported")
+
 // InvalidConversionError is an error type for invalid temperature conversions.
 type InvalidConversionError struct {
-	input  TempScale
-	output TempScale
+	input  Scale
+	output Scale
+	err    error
 }
 
 func (e InvalidConversionError) Error() string {
-	return fmt.Sprintf("invalid conversion from '%v' to '%v'", e.input.Name(), e.output.Name())
+	return fmt.Sprintf("invalid conversion from %s to %s: %s", e.input.Name(), e.output.Name(), e.err.Error())
 }
 
 // Convert converts a temperature from a temperature scale to another.
@@ -49,9 +53,13 @@ func kelvinFrom(ts Scale, k *kelvin) error {
 	case *roemer:
 		t = (ts.Temp()*40 - 7.5*40 + math.Abs(absoluteZeroC)*21) / 21
 	default:
-		panic(fmt.Errorf("tempconv: %w", &InvalidConversionError{input: ts, output: k}))
+		panic(fmt.Errorf("tempconv: %w", InvalidConversionError{input: ts, output: k, err: ErrScaleNotSupported}))
 	}
-	return k.SetTemp(t)
+	err := k.SetTemp(t)
+	if err != nil {
+		return fmt.Errorf("tempconv: %w", InvalidConversionError{input: ts, output: k, err: err})
+	}
+	return nil
 }
 
 func kelvinTo(ts Scale, k *kelvin) error {
@@ -74,7 +82,11 @@ func kelvinTo(ts Scale, k *kelvin) error {
 	case *roemer:
 		t = ((k.Temp()*21 - math.Abs(absoluteZeroC)*21) + 7.5*40) / 40
 	default:
-		panic(fmt.Errorf("tempconv: %w", &InvalidConversionError{input: k, output: ts}))
+		panic(fmt.Errorf("tempconv: %w", InvalidConversionError{input: ts, output: k, err: ErrScaleNotSupported}))
 	}
-	return ts.SetTemp(t)
+	err := ts.SetTemp(t)
+	if err != nil {
+		return fmt.Errorf("tempconv: %w", InvalidConversionError{input: k, output: ts, err: err})
+	}
+	return nil
 }

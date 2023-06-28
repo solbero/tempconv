@@ -19,10 +19,7 @@ const (
 )
 
 // AbsoluteZeroError is an error type for temperatures below absolute zero.
-type AbsoluteZeroError struct {
-	Temp float64
-	Zero float64
-}
+var ErrAbsoluteZero = fmt.Errorf("temperature below absolute zero")
 
 // Scale is an interface for temperature scales.
 type Scale interface {
@@ -208,7 +205,7 @@ func checkAbsoluteZero(t, zero float64) (float64, error) {
 	if math.Signbit(t) != math.Signbit(zero) && math.Abs(t-zero) < equalityThresholdFloat64 {
 		return zero, nil
 	} else if t < zero {
-		return 0, fmt.Errorf("tempconv: %w", &AbsoluteZeroError{t, zero})
+		return 0, fmt.Errorf("tempconv: %w", ErrAbsoluteZero)
 	}
 	return t, nil
 }

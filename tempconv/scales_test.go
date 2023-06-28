@@ -149,9 +149,9 @@ func TestAbsoluteZeroError(t *testing.T) {
 
 	for _, c := range cases {
 		err := c.tempscale.SetTemp(c.temp)
-		var target *AbsoluteZeroError
+		target := ErrAbsoluteZero
 
-		if !errors.As(err, &target) {
+		if !errors.Is(err, target) {
 			t.Errorf("got %T want %T", err, target)
 		}
 	}
