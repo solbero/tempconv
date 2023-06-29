@@ -201,6 +201,27 @@ func (r *roemer) SetTemp(t float64) error {
 	return nil
 }
 
+func ScaleNames() (names [][]string) {
+	scales := []Scale{
+		NewKelvin(),
+		NewCelsius(),
+		NewFahrenheit(),
+		NewRankine(),
+		NewDelisle(),
+		NewNewton(),
+		NewReaumur(),
+		NewRomer(),
+	}
+	for _, s := range scales {
+		if !(s.Alias() == "") {
+			names = append(names, []string{s.Name(), s.Alias()})
+		} else {
+			names = append(names, []string{s.Name()})
+		}
+	}
+	return names
+}
+
 func checkAbsoluteZero(t, zero float64) (float64, error) {
 	if math.Signbit(t) != math.Signbit(zero) && math.Abs(t-zero) < equalityThresholdFloat64 {
 		return zero, nil
