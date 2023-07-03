@@ -1,5 +1,12 @@
 # Tempconv
 
+![Downloads](https://img.shields.io/github/downloads/solbero/tempconv/total)
+![Build](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/release?label=build)
+![Tests](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/test?label=tests)
+![Codecov](https://img.shields.io/codecov/c/github/solbero/tempconv)
+![License](https://img.shields.io/github/license/solbero/tempconv)
+
+
 Temperature conversion tool for the command line written in Go.
 
 ## Description
