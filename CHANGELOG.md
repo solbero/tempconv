@@ -1,6 +1,12 @@
 # Changelog
 
-## 1.0.0 - <date>
+## 1.0.1 - 2023-07-03
+### Fixed
+
+- Fixed uploading of coverage reports to Codecov
+- Fixed README.md badges
+
+## 1.0.0 - 2023-07-03
 
 _First release._
 
