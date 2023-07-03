@@ -1,8 +1,8 @@
 # Tempconv
 
-![Downloads](https://img.shields.io/github/downloads/solbero/tempconv/total)
-![Build](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/release?label=build)
-![Tests](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/test?label=tests)
+![Release](https://img.shields.io/github/v/release/solbero/tempconv)
+![Build](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/release.yml)
+![Tests](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/test.yml?label=tests)
 ![Codecov](https://img.shields.io/codecov/c/github/solbero/tempconv)
 ![License](https://img.shields.io/github/license/solbero/tempconv)
 
