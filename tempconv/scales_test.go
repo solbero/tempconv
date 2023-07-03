@@ -8,8 +8,8 @@ import (
 
 func TestFactory(t *testing.T) {
 	cases := []struct {
-		tempscale Scale
-		want      string
+		scale Scale
+		want  string
 	}{
 		{NewKelvin(), "0 K"},
 		{NewCelsius(), "0 °C"},
@@ -22,18 +22,20 @@ func TestFactory(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := fmt.Sprint(c.tempscale)
+		t.Run(fmt.Sprintf("%v", c.scale.Name()), func(t *testing.T) {
+			got := fmt.Sprint(c.scale)
 
-		if got != c.want {
-			t.Errorf("got %v want %v", got, c.want)
-		}
+			if got != c.want {
+				t.Errorf("got %v want %v", got, c.want)
+			}
+		})
 	}
 }
 
 func TestName(t *testing.T) {
 	cases := []struct {
-		tempscale Scale
-		want      string
+		scale Scale
+		want  string
 	}{
 		{NewKelvin(), "kelvin"},
 		{NewCelsius(), "celsius"},
@@ -46,18 +48,20 @@ func TestName(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := c.tempscale.Name()
+		t.Run(fmt.Sprintf("%v", c.scale.Name()), func(t *testing.T) {
+			got := c.scale.Name()
 
-		if got != c.want {
-			t.Errorf("got %v want %v", got, c.want)
-		}
+			if got != c.want {
+				t.Errorf("got %v want %v", got, c.want)
+			}
+		})
 	}
 }
 
 func TestTemp(t *testing.T) {
 	cases := []struct {
-		tempscale Scale
-		want      float64
+		scale Scale
+		want  float64
 	}{
 		{NewKelvin(), 0},
 		{NewCelsius(), 0},
@@ -70,41 +74,45 @@ func TestTemp(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := c.tempscale.Temp()
+		t.Run(fmt.Sprintf("%v", c.scale.Name()), func(t *testing.T) {
+			got := c.scale.Temp()
 
-		if got != c.want {
-			t.Errorf("got %v want %v", got, c.want)
-		}
+			if got != c.want {
+				t.Errorf("got %v want %v", got, c.want)
+			}
+		})
 	}
 }
 
 func TestSetTemp(t *testing.T) {
 	cases := []struct {
-		tempscale Scale
-		temp      float64
-		want      string
+		scale Scale
+		temp  float64
 	}{
-		{NewKelvin(), 100, "100 K"},
-		{NewCelsius(), 100, "100 °C"},
-		{NewFahrenheit(), 100, "100 °F"},
-		{NewRankine(), 100, "100 °R"},
-		{NewDelisle(), 100, "100 °De"},
-		{NewNewton(), 100, "100 °N"},
-		{NewReaumur(), 100, "100 °Ré"},
-		{NewRomer(), 100, "100 °Rø"},
+		{NewKelvin(), 100},
+		{NewCelsius(), 100},
+		{NewFahrenheit(), 100},
+		{NewRankine(), 100},
+		{NewDelisle(), 100},
+		{NewNewton(), 100},
+		{NewReaumur(), 100},
+		{NewRomer(), 100},
 	}
 
 	for _, c := range cases {
-		err := c.tempscale.SetTemp(c.temp)
-		if err != nil {
-			t.Errorf("got %v want nil", err)
-		}
+		t.Run(fmt.Sprintf("%v", c.scale.Name()), func(t *testing.T) {
+			err := c.scale.SetTemp(c.temp)
+			if err != nil {
+				t.Errorf("got %v want nil", err)
+			}
 
-		got := fmt.Sprint(c.tempscale)
+			got := c.scale.Temp()
+			want := c.temp
 
-		if got != c.want {
-			t.Errorf("got %v want %v", got, c.want)
-		}
+			if got != want {
+				t.Errorf("got %v want %v", got, want)
+			}
+		})
 	}
 }
 
@@ -124,11 +132,13 @@ func TestUnit(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		got := c.tempscale.Unit()
+		t.Run(fmt.Sprintf("%v", c.tempscale.Name()), func(t *testing.T) {
+			got := c.tempscale.Unit()
 
-		if got != c.want {
-			t.Errorf("got %v want %v", got, c.want)
-		}
+			if got != c.want {
+				t.Errorf("got %v want %v", got, c.want)
+			}
+		})
 	}
 }
 
@@ -148,11 +158,13 @@ func TestAbsoluteZeroError(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		err := c.tempscale.SetTemp(c.temp)
-		target := ErrAbsoluteZero
+		t.Run(fmt.Sprintf("%v", c.tempscale.Name()), func(t *testing.T) {
+			err := c.tempscale.SetTemp(c.temp)
+			target := ErrAbsoluteZero
 
-		if !errors.Is(err, target) {
-			t.Errorf("got %T want %T", err, target)
-		}
+			if !errors.Is(err, target) {
+				t.Errorf("got %T want %T", err, target)
+			}
+		})
 	}
 }
