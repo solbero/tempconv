@@ -58,7 +58,7 @@ func kelvinFrom(ts scale.Scale, k *scale.Kelvin) error {
 	}
 	err := k.SetTemp(t)
 	if err != nil {
-		return fmt.Errorf("tempconv: %w", InvalidConversionError{input: ts, output: k, err: err})
+		return fmt.Errorf("tempconv: %w", InvalidConversionError{input: ts, output: k, err: errors.Unwrap(err)})
 	}
 	return nil
 }
@@ -87,7 +87,7 @@ func kelvinTo(ts scale.Scale, k *scale.Kelvin) error {
 	}
 	err := ts.SetTemp(t)
 	if err != nil {
-		return fmt.Errorf("tempconv: %w", InvalidConversionError{input: k, output: ts, err: err})
+		return fmt.Errorf("tempconv: %w", InvalidConversionError{input: k, output: ts, err: errors.Unwrap(err)})
 	}
 	return nil
 }
