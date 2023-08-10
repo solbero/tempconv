@@ -57,12 +57,12 @@ func assertConversion(t *testing.T, cases []conversionCases) {
 		t.Run(msg, func(t *testing.T) {
 			err := c.input.SetTemp(c.temp)
 			if err != nil {
-				t.Errorf("got %v want %v", err, nil)
+				t.Fatalf("%v", err)
 			}
 
 			err = Convert(c.input, c.output)
 			if err != nil {
-				t.Errorf("%v", err)
+				t.Fatalf("%v", err)
 			}
 
 			got := c.output.Temp()
