@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/solbero/tempconv/tempconv"
+	"github.com/solbero/tempconv/scale"
 )
 
 func TestParseArgs(t *testing.T) {
@@ -17,15 +17,15 @@ func TestParseArgs(t *testing.T) {
 		conf *config
 	}{
 		{[]string{"0", "celsius", "kelvin"},
-			&config{temp: 0, fromScale: tempconv.NewCelsius(), toScale: tempconv.NewFahrenheit(), decimal: 2}},
+			&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 2}},
 		{[]string{"--", "-0", "celsius", "kelvin"},
-			&config{temp: 0, fromScale: tempconv.NewCelsius(), toScale: tempconv.NewFahrenheit(), decimal: 2}},
+			&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 2}},
 		{[]string{"0", "c", "k"},
-			&config{temp: 0, fromScale: tempconv.NewCelsius(), toScale: tempconv.NewFahrenheit(), decimal: 2}},
+			&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 2}},
 		{[]string{"-u", "0", "celsius", "kelvin"},
-			&config{temp: 0, fromScale: tempconv.NewCelsius(), toScale: tempconv.NewFahrenheit(), decimal: 2, unit: true}},
+			&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 2, unit: true}},
 		{[]string{"-u", "-d", "4", "0", "celsius", "kelvin"},
-			&config{temp: 0, fromScale: tempconv.NewCelsius(), toScale: tempconv.NewFahrenheit(), decimal: 4, unit: true}},
+			&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 4, unit: true}},
 		{[]string{"-h"},
 			&config{decimal: 2, help: true}},
 		{[]string{"-h", "0", "celsius", "kelvin"},
