@@ -1,11 +1,11 @@
-package tempconv
+package scale
 
 import (
 	"fmt"
 	"math"
 )
 
-const equalityThresholdFloat64 = 1e-12
+const EqualityThresholdFloat64 = 1e-12
 
 const (
 	absoluteZeroK  float64 = 0.0
@@ -31,43 +31,43 @@ type Scale interface {
 }
 
 // NewKelvin returns a new Kelvin scale.
-func NewKelvin() *kelvin {
-	return &kelvin{baseScale{name: "kelvin", unit: "K"}}
+func NewKelvin() *Kelvin {
+	return &Kelvin{baseScale{name: "kelvin", unit: "K"}}
 }
 
 // NewCelsius returns a new Celsius scale.
-func NewCelsius() *celsius {
-	return &celsius{baseScale{name: "celsius", unit: "°C"}}
+func NewCelsius() *Celsius {
+	return &Celsius{baseScale{name: "celsius", unit: "°C"}}
 }
 
 // NewFahrenheit returns a new Fahrenheit scale.
-func NewFahrenheit() *fahrenheit {
-	return &fahrenheit{baseScale{name: "fahrenheit", unit: "°F"}}
+func NewFahrenheit() *Fahrenheit {
+	return &Fahrenheit{baseScale{name: "fahrenheit", unit: "°F"}}
 }
 
 // NewRankine returns a new Rankine scale.
-func NewRankine() *rankine {
-	return &rankine{baseScale{name: "rankine", unit: "°R"}}
+func NewRankine() *Rankine {
+	return &Rankine{baseScale{name: "rankine", unit: "°R"}}
 }
 
 // NewDelisle returns a new Delisle scale.
-func NewDelisle() *delisle {
-	return &delisle{baseScale{name: "delisle", unit: "°De"}}
+func NewDelisle() *Delisle {
+	return &Delisle{baseScale{name: "delisle", unit: "°De"}}
 }
 
 // NewNewton returns a new Newton scale.
-func NewNewton() *newton {
-	return &newton{baseScale{name: "newton", unit: "°N"}}
+func NewNewton() *Newton {
+	return &Newton{baseScale{name: "newton", unit: "°N"}}
 }
 
 // NewReaumur returns a new Réaumur scale.
-func NewReaumur() *reaumur {
-	return &reaumur{baseScale{name: "réaumur", alias: "reaumur", unit: "°Ré"}}
+func NewReaumur() *Reaumur {
+	return &Reaumur{baseScale{name: "réaumur", alias: "reaumur", unit: "°Ré"}}
 }
 
 // NewRomer returns a new Rømer scale.
-func NewRomer() *roemer {
-	return &roemer{baseScale{name: "rømer", alias: "romer", unit: "°Rø"}}
+func NewRomer() *Roemer {
+	return &Roemer{baseScale{name: "rømer", alias: "romer", unit: "°Rø"}}
 }
 
 type baseScale struct {
@@ -97,11 +97,11 @@ func (b *baseScale) Alias() string {
 	return b.alias
 }
 
-type kelvin struct {
+type Kelvin struct {
 	baseScale
 }
 
-func (k *kelvin) SetTemp(t float64) error {
+func (k *Kelvin) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(t, absoluteZeroK)
 	if err != nil {
 		return err
@@ -110,11 +110,11 @@ func (k *kelvin) SetTemp(t float64) error {
 	return nil
 }
 
-type celsius struct {
+type Celsius struct {
 	baseScale
 }
 
-func (c *celsius) SetTemp(t float64) error {
+func (c *Celsius) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(t, absoluteZeroC)
 	if err != nil {
 		return err
@@ -123,11 +123,11 @@ func (c *celsius) SetTemp(t float64) error {
 	return nil
 }
 
-type fahrenheit struct {
+type Fahrenheit struct {
 	baseScale
 }
 
-func (f *fahrenheit) SetTemp(t float64) error {
+func (f *Fahrenheit) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(t, absoluteZeroF)
 	if err != nil {
 		return err
@@ -136,11 +136,11 @@ func (f *fahrenheit) SetTemp(t float64) error {
 	return nil
 }
 
-type rankine struct {
+type Rankine struct {
 	baseScale
 }
 
-func (r *rankine) SetTemp(t float64) error {
+func (r *Rankine) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(t, absoluteZeroR)
 	if err != nil {
 		return err
@@ -149,11 +149,11 @@ func (r *rankine) SetTemp(t float64) error {
 	return nil
 }
 
-type delisle struct {
+type Delisle struct {
 	baseScale
 }
 
-func (d *delisle) SetTemp(t float64) error {
+func (d *Delisle) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(-t, -absoluteZeroDe) // Delisle scale is inverted
 	if err != nil {
 		return err
@@ -162,11 +162,11 @@ func (d *delisle) SetTemp(t float64) error {
 	return nil
 }
 
-type newton struct {
+type Newton struct {
 	baseScale
 }
 
-func (n *newton) SetTemp(t float64) error {
+func (n *Newton) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(t, absoluteZeroN)
 	if err != nil {
 		return err
@@ -175,11 +175,11 @@ func (n *newton) SetTemp(t float64) error {
 	return nil
 }
 
-type reaumur struct {
+type Reaumur struct {
 	baseScale
 }
 
-func (r *reaumur) SetTemp(t float64) error {
+func (r *Reaumur) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(t, absoluteZeroRé)
 	if err != nil {
 		return err
@@ -188,11 +188,11 @@ func (r *reaumur) SetTemp(t float64) error {
 	return nil
 }
 
-type roemer struct {
+type Roemer struct {
 	baseScale
 }
 
-func (r *roemer) SetTemp(t float64) error {
+func (r *Roemer) SetTemp(t float64) error {
 	t, err := checkAbsoluteZero(t, absolutezeroRø)
 	if err != nil {
 		return err
@@ -223,7 +223,7 @@ func ScaleNames() (names [][]string) {
 }
 
 func checkAbsoluteZero(t, zero float64) (float64, error) {
-	if math.Signbit(t) != math.Signbit(zero) && math.Abs(t-zero) < equalityThresholdFloat64 {
+	if math.Signbit(t) != math.Signbit(zero) && math.Abs(t-zero) < EqualityThresholdFloat64 {
 		return zero, nil
 	} else if t < zero {
 		return 0, fmt.Errorf("tempconv: %w", ErrAbsoluteZero)

@@ -7,7 +7,8 @@ import (
 	"io"
 	"text/template"
 
-	"github.com/solbero/tempconv/tempconv"
+	"github.com/solbero/tempconv/convert"
+	"github.com/solbero/tempconv/scale"
 )
 
 var templateParsed *template.Template
@@ -60,7 +61,7 @@ func init() {
 
 func Run(w io.Writer, conf *config, flags *flag.FlagSet, version string) (err error) {
 	if conf.help {
-		data := templateData(tempconv.ScaleNames(), flags)
+		data := templateData(scale.ScaleNames(), flags)
 		templateParsed.Execute(w, data)
 		return nil
 	}
@@ -77,7 +78,7 @@ func Run(w io.Writer, conf *config, flags *flag.FlagSet, version string) (err er
 		return err
 	}
 
-	err = tempconv.Convert(conf.fromScale, conf.toScale)
+	err = convert.Convert(conf.fromScale, conf.toScale)
 	if err != nil {
 		err := errors.Unwrap(err)
 		fprinte(w, err.Error())

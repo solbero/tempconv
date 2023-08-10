@@ -3,13 +3,13 @@ package cli
 import (
 	"io"
 
-	"github.com/solbero/tempconv/tempconv"
+	"github.com/solbero/tempconv/scale"
 )
 
 type config struct {
 	temp      float64
-	fromScale tempconv.Scale
-	toScale   tempconv.Scale
+	fromScale scale.Scale
+	toScale   scale.Scale
 	decimal   int
 	unit      bool
 	version   bool

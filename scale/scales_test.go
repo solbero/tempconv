@@ -1,4 +1,4 @@
-package tempconv
+package scale
 
 import (
 	"errors"

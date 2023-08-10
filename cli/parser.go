@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/solbero/tempconv/tempconv"
+	"github.com/solbero/tempconv/scale"
 )
 
 func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, err error) {
@@ -78,8 +78,8 @@ func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, e
 	return conf, nil
 }
 
-func parseScale(name string) (tempconv.Scale, error) {
-	scales := flatten(tempconv.ScaleNames())
+func parseScale(name string) (scale.Scale, error) {
+	scales := flatten(scale.ScaleNames())
 	matches := matchAll(name, scales)
 
 	if len(matches) == 0 {
@@ -90,25 +90,25 @@ func parseScale(name string) (tempconv.Scale, error) {
 
 	switch matches[0] {
 	case "kelvin":
-		return tempconv.NewKelvin(), nil
+		return scale.NewKelvin(), nil
 	case "celsius":
-		return tempconv.NewCelsius(), nil
+		return scale.NewCelsius(), nil
 	case "fahrenheit":
-		return tempconv.NewFahrenheit(), nil
+		return scale.NewFahrenheit(), nil
 	case "rankine":
-		return tempconv.NewRankine(), nil
+		return scale.NewRankine(), nil
 	case "delisle":
-		return tempconv.NewDelisle(), nil
+		return scale.NewDelisle(), nil
 	case "newton":
-		return tempconv.NewNewton(), nil
+		return scale.NewNewton(), nil
 	case "réaumur":
-		return tempconv.NewReaumur(), nil
+		return scale.NewReaumur(), nil
 	case "reaumur": // alias
-		return tempconv.NewReaumur(), nil
+		return scale.NewReaumur(), nil
 	case "rømer":
-		return tempconv.NewRomer(), nil
+		return scale.NewRomer(), nil
 	case "romer": // alias
-		return tempconv.NewRomer(), nil
+		return scale.NewRomer(), nil
 	default:
 		panic(errors.New("unable to parse scale"))
 	}
