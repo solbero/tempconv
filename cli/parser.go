@@ -11,10 +11,23 @@ import (
 	"github.com/solbero/tempconv/scale"
 )
 
+const usageMsg = "try 'tempconv -h' for more information"
+
+type config struct {
+	temp    float64
+	input   *scale.Scale
+	output  *scale.Scale
+	decimal int
+	unit    bool
+	version bool
+	help    bool
+}
+
 func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, err error) {
 	flags.SetOutput(w)
 	flags.Usage = func() {}
 
+	// Parse flags
 	conf = &config{}
 	flags.IntVar(&conf.decimal, "d", 2, "Number of decimal places [default: 2, min: 0, max: 12]")
 	flags.BoolVar(&conf.unit, "u", false, "Include temperature unit")
@@ -27,6 +40,7 @@ func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, e
 		return nil, err
 	}
 
+	// Check temp decimal places
 	var msg string
 	min, max := 0, 12
 	if conf.decimal < min || conf.decimal > max {
@@ -35,16 +49,19 @@ func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, e
 		return nil, fmt.Errorf(msg)
 	}
 
+	// Check mutually exclusive flags
 	if conf.version && conf.help {
 		msg = "mutually exclusive flags: -h, -v"
 		fprinte(w, msg)
 		return nil, errors.New("mutually exclusive flags: -h, -v")
 	}
 
+	// Print version or help
 	if conf.version || conf.help {
 		return conf, nil
 	}
 
+	// Check non-flag arguments
 	nonFlagArgs := flags.Args()
 	err = checkNonFlagArgs(nonFlagArgs)
 	if err != nil {
@@ -52,9 +69,10 @@ func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, e
 		return nil, err
 	}
 
+	// Parse non-flag arguments
 	temp := nonFlagArgs[0]
-	fromScale := nonFlagArgs[1]
-	toScale := nonFlagArgs[2]
+	input := nonFlagArgs[1]
+	output := nonFlagArgs[2]
 	conf.temp, err = strconv.ParseFloat(temp, 64)
 
 	if err != nil {
@@ -62,13 +80,13 @@ func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, e
 		fprinte(w, msg)
 		return nil, fmt.Errorf(msg)
 	}
-	conf.fromScale, err = parseScale(fromScale)
+	conf.input, err = parseScale(input)
 
 	if err != nil {
 		fprinte(w, err.Error())
 		return nil, err
 	}
-	conf.toScale, err = parseScale(toScale)
+	conf.output, err = parseScale(output)
 
 	if err != nil {
 		fprinte(w, err.Error())
@@ -78,7 +96,7 @@ func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, e
 	return conf, nil
 }
 
-func parseScale(name string) (scale.Scale, error) {
+func parseScale(name string) (*scale.Scale, error) {
 	scales := flatten(scale.ScaleNames())
 	matches := matchAll(name, scales)
 
@@ -115,7 +133,8 @@ func parseScale(name string) (scale.Scale, error) {
 }
 
 func checkNonFlagArgs(args []string) error {
-	required := []string{"temp", "fromScale", "toScale"} // required args
+	required := []string{"temp", "from scale", "to scale"} // required args
+
 	if len(args) == 0 {
 		return fmt.Errorf("missing required arguments: %s", strings.Join(required[0:], ", "))
 	} else if len(args) == 1 {
@@ -125,26 +144,36 @@ func checkNonFlagArgs(args []string) error {
 	} else if len(args) > 3 {
 		return fmt.Errorf("supplied too many arguments: %v", strings.Join(args[3:], ", "))
 	}
+
 	return nil
 }
 
 func matchAll(pattern string, slice []string) []string {
 	matches := []string{}
+
 	if pattern == "" {
 		return matches
 	}
+
 	for i, s := range slice {
 		if strings.HasPrefix(s, strings.ToLower(pattern)) {
 			matches = append(matches, slice[i])
 		}
 	}
+
 	return matches
 }
 
 func flatten(slice [][]string) []string {
 	flat := []string{}
+
 	for _, s := range slice {
 		flat = append(flat, s...)
 	}
+
 	return flat
+}
+
+func fprinte(w io.Writer, msg string) {
+	w.Write([]byte(msg + "\n" + usageMsg))
 }

@@ -71,14 +71,14 @@ func Run(w io.Writer, conf *config, flags *flag.FlagSet, version string) (err er
 		return nil
 	}
 
-	err = conf.fromScale.SetTemp(conf.temp)
+	err = conf.input.SetTemp(conf.temp)
 	if err != nil {
 		err := errors.Unwrap(err)
 		fprinte(w, err.Error())
 		return err
 	}
 
-	err = convert.Convert(conf.fromScale, conf.toScale)
+	err = convert.Convert(conf.input, conf.output)
 	if err != nil {
 		err := errors.Unwrap(err)
 		fprinte(w, err.Error())
@@ -86,9 +86,9 @@ func Run(w io.Writer, conf *config, flags *flag.FlagSet, version string) (err er
 	}
 
 	if conf.unit {
-		fmt.Fprintf(w, "%.*f %s", conf.decimal, conf.toScale.Temp(), conf.toScale.Unit())
+		fmt.Fprintf(w, "%.*f %s", conf.decimal, conf.output.Temp(), conf.output.Unit)
 	} else {
-		fmt.Fprintf(w, "%.*f", conf.decimal, conf.toScale.Temp())
+		fmt.Fprintf(w, "%.*f", conf.decimal, conf.output.Temp())
 	}
 	return nil
 }

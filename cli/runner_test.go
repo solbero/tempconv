@@ -15,10 +15,10 @@ func TestRun(t *testing.T) {
 		config *config
 		want   string
 	}{
-		{&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 0}, "32"},
-		{&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 2}, "32.00"},
-		{&config{temp: 0, fromScale: scale.NewCelsius(), toScale: scale.NewFahrenheit(), decimal: 2, unit: true}, "32.00 °F"},
-		{&config{temp: -273.15, fromScale: scale.NewCelsius(), toScale: scale.NewKelvin(), decimal: 2}, "0.00"},
+		{&config{temp: 0, input: scale.NewCelsius(), output: scale.NewFahrenheit(), decimal: 0}, "32"},
+		{&config{temp: 0, input: scale.NewCelsius(), output: scale.NewFahrenheit(), decimal: 2}, "32.00"},
+		{&config{temp: 0, input: scale.NewCelsius(), output: scale.NewFahrenheit(), decimal: 2, unit: true}, "32.00 °F"},
+		{&config{temp: -273.15, input: scale.NewCelsius(), output: scale.NewKelvin(), decimal: 2}, "0.00"},
 	}
 
 	for _, c := range cases {
@@ -71,7 +71,7 @@ func TestRunError(t *testing.T) {
 		want   error
 	}{
 		{"absolute zero error",
-			&config{temp: -300, fromScale: scale.NewCelsius(), toScale: scale.NewKelvin(), decimal: 2},
+			&config{temp: -300, input: scale.NewCelsius(), output: scale.NewKelvin(), decimal: 2},
 			scale.ErrAbsoluteZero},
 	}
 
