@@ -18,191 +18,101 @@ const (
 	absolutezeroRø float64 = -135.90375
 )
 
+const (
+	KELVIN = iota
+	CELSIUS
+	FAHRENHEIT
+	RANKINE
+	DELISLE
+	NEWTON
+	REAUMUR
+	ROMER
+)
+
 // AbsoluteZeroError is an error type for temperatures below absolute zero.
 var ErrAbsoluteZero = fmt.Errorf("temperature below absolute zero")
 
-// Scale is an interface for temperature scales.
-type Scale interface {
-	Name() string
-	Alias() string
-	Temp() float64
-	SetTemp(float64) error
-	Unit() string
-}
-
 // NewKelvin returns a new Kelvin scale.
-func NewKelvin() *Kelvin {
-	return &Kelvin{baseScale{name: "kelvin", unit: "K"}}
+func NewKelvin() *Scale {
+	return &Scale{Type: KELVIN, Name: "kelvin", Unit: "K"}
 }
 
 // NewCelsius returns a new Celsius scale.
-func NewCelsius() *Celsius {
-	return &Celsius{baseScale{name: "celsius", unit: "°C"}}
+func NewCelsius() *Scale {
+	return &Scale{Type: CELSIUS, Name: "celsius", Unit: "°C"}
 }
 
 // NewFahrenheit returns a new Fahrenheit scale.
-func NewFahrenheit() *Fahrenheit {
-	return &Fahrenheit{baseScale{name: "fahrenheit", unit: "°F"}}
+func NewFahrenheit() *Scale {
+	return &Scale{Type: FAHRENHEIT, Name: "fahrenheit", Unit: "°F"}
 }
 
 // NewRankine returns a new Rankine scale.
-func NewRankine() *Rankine {
-	return &Rankine{baseScale{name: "rankine", unit: "°R"}}
+func NewRankine() *Scale {
+	return &Scale{Type: RANKINE, Name: "rankine", Unit: "°R"}
 }
 
 // NewDelisle returns a new Delisle scale.
-func NewDelisle() *Delisle {
-	return &Delisle{baseScale{name: "delisle", unit: "°De"}}
+func NewDelisle() *Scale {
+	return &Scale{Type: DELISLE, Name: "delisle", Unit: "°De"}
 }
 
 // NewNewton returns a new Newton scale.
-func NewNewton() *Newton {
-	return &Newton{baseScale{name: "newton", unit: "°N"}}
+func NewNewton() *Scale {
+	return &Scale{Type: NEWTON, Name: "newton", Unit: "°N"}
 }
 
 // NewReaumur returns a new Réaumur scale.
-func NewReaumur() *Reaumur {
-	return &Reaumur{baseScale{name: "réaumur", alias: "reaumur", unit: "°Ré"}}
+func NewReaumur() *Scale {
+	return &Scale{Type: REAUMUR, Name: "réaumur", Alias: "reaumur", Unit: "°Ré"}
 }
 
 // NewRomer returns a new Rømer scale.
-func NewRomer() *Roemer {
-	return &Roemer{baseScale{name: "rømer", alias: "romer", unit: "°Rø"}}
+func NewRomer() *Scale {
+	return &Scale{Type: ROMER, Name: "rømer", Alias: "romer", Unit: "°Rø"}
 }
 
-type baseScale struct {
-	name  string
-	alias string
+type Scale struct {
+	Type  int
+	Name  string
+	Alias string
 	temp  float64
-	unit  string
+	Unit  string
 }
 
-func (b baseScale) String() string {
-	return fmt.Sprintf("%g %v", b.temp, b.unit)
-}
+func (b Scale) String() string { return fmt.Sprintf("%g %v", b.temp, b.Unit) }
+func (b *Scale) Temp() float64 { return b.temp }
+func (b *Scale) SetTemp(t float64) (err error) {
+	switch b.Type {
+	case KELVIN:
+		t, err = checkAbsoluteZero(t, absoluteZeroK)
+	case CELSIUS:
+		t, err = checkAbsoluteZero(t, absoluteZeroC)
+	case FAHRENHEIT:
+		t, err = checkAbsoluteZero(t, absoluteZeroF)
+	case RANKINE:
+		t, err = checkAbsoluteZero(t, absoluteZeroR)
+	case DELISLE:
+		t, err = checkAbsoluteZero(-t, -absoluteZeroDe)
+		t = -t // Delisle scale is inverted
+	case NEWTON:
+		t, err = checkAbsoluteZero(t, absoluteZeroN)
+	case REAUMUR:
+		t, err = checkAbsoluteZero(t, absoluteZeroRé)
+	case ROMER:
+		t, err = checkAbsoluteZero(t, absolutezeroRø)
+	}
 
-func (b *baseScale) Temp() float64 {
-	return b.temp
-}
-
-func (b *baseScale) Unit() string {
-	return b.unit
-}
-
-func (b *baseScale) Name() string {
-	return b.name
-}
-
-func (b *baseScale) Alias() string {
-	return b.alias
-}
-
-type Kelvin struct {
-	baseScale
-}
-
-func (k *Kelvin) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(t, absoluteZeroK)
 	if err != nil {
 		return err
 	}
-	k.temp = t
-	return nil
-}
 
-type Celsius struct {
-	baseScale
-}
-
-func (c *Celsius) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(t, absoluteZeroC)
-	if err != nil {
-		return err
-	}
-	c.temp = t
-	return nil
-}
-
-type Fahrenheit struct {
-	baseScale
-}
-
-func (f *Fahrenheit) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(t, absoluteZeroF)
-	if err != nil {
-		return err
-	}
-	f.temp = t
-	return nil
-}
-
-type Rankine struct {
-	baseScale
-}
-
-func (r *Rankine) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(t, absoluteZeroR)
-	if err != nil {
-		return err
-	}
-	r.temp = t
-	return nil
-}
-
-type Delisle struct {
-	baseScale
-}
-
-func (d *Delisle) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(-t, -absoluteZeroDe) // Delisle scale is inverted
-	if err != nil {
-		return err
-	}
-	d.temp = -t // Revert inversion
-	return nil
-}
-
-type Newton struct {
-	baseScale
-}
-
-func (n *Newton) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(t, absoluteZeroN)
-	if err != nil {
-		return err
-	}
-	n.temp = t
-	return nil
-}
-
-type Reaumur struct {
-	baseScale
-}
-
-func (r *Reaumur) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(t, absoluteZeroRé)
-	if err != nil {
-		return err
-	}
-	r.temp = t
-	return nil
-}
-
-type Roemer struct {
-	baseScale
-}
-
-func (r *Roemer) SetTemp(t float64) error {
-	t, err := checkAbsoluteZero(t, absolutezeroRø)
-	if err != nil {
-		return err
-	}
-	r.temp = t
+	b.temp = t
 	return nil
 }
 
 func ScaleNames() (names [][]string) {
-	scales := []Scale{
+	scales := []*Scale{
 		NewKelvin(),
 		NewCelsius(),
 		NewFahrenheit(),
@@ -212,21 +122,24 @@ func ScaleNames() (names [][]string) {
 		NewReaumur(),
 		NewRomer(),
 	}
+
 	for _, s := range scales {
-		if !(s.Alias() == "") {
-			names = append(names, []string{s.Name(), s.Alias()})
+		if !(s.Alias == "") {
+			names = append(names, []string{s.Name, s.Alias})
 		} else {
-			names = append(names, []string{s.Name()})
+			names = append(names, []string{s.Name})
 		}
 	}
+
 	return names
 }
 
-func checkAbsoluteZero(t, zero float64) (float64, error) {
-	if math.Signbit(t) != math.Signbit(zero) && math.Abs(t-zero) < EqualityThresholdFloat64 {
-		return zero, nil
-	} else if t < zero {
+func checkAbsoluteZero(t, absoluteZero float64) (float64, error) {
+	if math.Signbit(t) != math.Signbit(absoluteZero) && math.Abs(t-absoluteZero) < EqualityThresholdFloat64 {
+		return absoluteZero, nil
+	} else if t < absoluteZero {
 		return 0, fmt.Errorf("tempconv: %w", ErrAbsoluteZero)
 	}
+
 	return t, nil
 }
