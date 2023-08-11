@@ -9,6 +9,42 @@ import (
 func TestFactory(t *testing.T) {
 	cases := []struct {
 		scale *Scale
+		name  string
+		alias string
+		temp  float64
+		unit  string
+	}{
+		{NewKelvin(), "kelvin", "", 0, "K"},
+		{NewCelsius(), "celsius", "", 0, "°C"},
+		{NewFahrenheit(), "fahrenheit", "", 0, "°F"},
+		{NewRankine(), "rankine", "", 0, "°R"},
+		{NewDelisle(), "delisle", "", 0, "°De"},
+		{NewNewton(), "newton", "", 0, "°N"},
+		{NewReaumur(), "réaumur", "reaumur", 0, "°Ré"},
+		{NewRomer(), "rømer", "romer", 0, "°Rø"},
+	}
+
+	for _, c := range cases {
+		t.Run(fmt.Sprintf("%v", c.scale.Name), func(t *testing.T) {
+			if c.scale.Name != c.name {
+				t.Errorf("got %v want %v", c.scale.Name, c.name)
+			}
+			if c.scale.Alias != c.alias {
+				t.Errorf("got %v want %v", c.scale.Alias, c.alias)
+			}
+			if c.scale.temp != c.temp {
+				t.Errorf("got %v want %v", c.scale.temp, c.temp)
+			}
+			if c.scale.Unit != c.unit {
+				t.Errorf("got %v want %v", c.scale.Unit, c.unit)
+			}
+		})
+	}
+}
+
+func TestString(t *testing.T) {
+	cases := []struct {
+		scale *Scale
 		want  string
 	}{
 		{NewKelvin(), "0 K"},
