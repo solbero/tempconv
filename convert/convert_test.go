@@ -9,9 +9,9 @@ import (
 )
 
 type conversionCases struct {
-	input  scale.Scale
+	input  *scale.Scale
 	temp   float64
-	output scale.Scale
+	output *scale.Scale
 	want   float64
 }
 
@@ -53,7 +53,7 @@ func TestTemperatureConversion(t *testing.T) {
 func assertConversion(t *testing.T, cases []conversionCases) {
 	t.Helper()
 	for _, c := range cases {
-		msg := fmt.Sprintf("%g %v -> %g %v", c.temp, c.input.Name(), c.want, c.output.Name())
+		msg := fmt.Sprintf("%g %v -> %g %v", c.temp, c.input.Name, c.want, c.output.Name)
 		t.Run(msg, func(t *testing.T) {
 			err := c.input.SetTemp(c.temp)
 			if err != nil {
