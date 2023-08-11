@@ -14,21 +14,21 @@ var (
 )
 
 func main() {
-	output := new(bytes.Buffer)
+	buff := new(bytes.Buffer)
 	flags := flag.NewFlagSet("tempconv", flag.ContinueOnError)
 
-	conf, err := cli.ParseArgs(output, os.Args[1:], flags)
+	conf, err := cli.ParseArgs(buff, os.Args[1:], flags)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, output.String())
+		fmt.Fprintln(os.Stderr, buff.String())
 		os.Exit(2)
 	}
 
-	err = cli.Run(output, conf, flags, version)
+	err = cli.Run(buff, conf, flags, version)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, output.String())
+		fmt.Fprintln(os.Stderr, buff.String())
 		os.Exit(2)
 	}
 
-	output.WriteByte('\n')
-	fmt.Fprint(os.Stdout, output.String())
+	buff.WriteByte('\n')
+	fmt.Fprint(os.Stdout, buff.String())
 }
