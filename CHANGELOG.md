@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 - 2023-08-13
+
+### Fixed
+
+- Refactored tempconv package into two packages: `scale` and `convert`
+
 ## 1.0.1 - 2023-07-03
 ### Fixed
 
