@@ -9,6 +9,10 @@
 
 Temperature conversion tool for the command line written in Go.
 
+## Demo
+
+![Demo](demo.gif)
+
 ## Description
 
 The tool supports conversion between the following temperature scales:
