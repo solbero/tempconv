@@ -16,11 +16,14 @@ var templateParsed *template.Template
 const helpTemplate = `tempconv converts temperatures between different temperature scales.
 
 Usage:
-  tempconv [OPTIONS] <temp> <from scale> <to scale>
-  tempconv -h
-  tempconv -v
+  tempconv [-u -d <int> | -h | -v] temp from_scale to_scale
 
 If temperature is negative, it must be prefixed with '--' to avoid being interpreted as a flag.
+
+Arguments:
+  temp        Temperature to convert
+  from_scale  Scale to convert temperature from
+  to_scale    Scale to convert temperature to
 
 Scales:
 {{- range .Scales}}{{- range $i, $v := .}}

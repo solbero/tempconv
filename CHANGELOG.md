@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.3 - 2023-08-25
+
+### Added
+
+ - Project logo to README.md
+ - Demo video of the CLI in action to README.md
+
+### Fixed
+
+  - Usage section in README.md
+
 ## 1.0.2 - 2023-08-13
 
 ### Fixed

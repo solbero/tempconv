@@ -31,8 +31,8 @@ func ParseArgs(w io.Writer, args []string, flags *flag.FlagSet) (conf *config, e
 	conf = &config{}
 	flags.IntVar(&conf.decimal, "d", 2, "Number of decimal places [default: 2, min: 0, max: 12]")
 	flags.BoolVar(&conf.unit, "u", false, "Include temperature unit")
-	flags.BoolVar(&conf.version, "v", false, "Show version")
-	flags.BoolVar(&conf.help, "h", false, "Show help")
+	flags.BoolVar(&conf.version, "v", false, "Show version and exit")
+	flags.BoolVar(&conf.help, "h", false, "Show help and exit")
 
 	err = flags.Parse(args)
 	if err != nil {
