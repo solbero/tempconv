@@ -1,17 +1,25 @@
-# Tempconv
-
-![Release](https://img.shields.io/github/v/release/solbero/tempconv)
-![Build](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/release.yml)
-![Tests](https://img.shields.io/github/actions/workflow/status/solbero/tempconv/test.yml?label=tests)
-![Codecov](https://img.shields.io/codecov/c/github/solbero/tempconv)
-![License](https://img.shields.io/github/license/solbero/tempconv)
-
-
-Temperature conversion tool for the command line written in Go.
+<p align="center"><img src="https://github.com/solbero/tempconv/blob/main/logo.png" alt="Logo" /></p>
+<p align="center">
+    <em>Temperature conversion tool for the command line written in Go.</em>
+</p>
+<p align="center">
+    <a href="https://github.com/solbero/tempconv/releases">
+        <img src="https://img.shields.io/github/v/release/solbero/tempconv" alt="Release" />
+    </a>
+    <a href="https://github.com/solbero/tempconv/actions/workflows/release.yml">
+        <img src="https://img.shields.io/github/actions/workflow/status/solbero/tempconv/release.yml" alt="Build" />
+    </a>
+    <a href="https://app.codecov.io/gh/solbero/tempconv">
+        <img src="https://img.shields.io/github/actions/workflow/status/solbero/tempconv/test.yml?label=tests" alt="Tests" />
+    </a>
+    <a href="https://github.com/solbero/tempconv/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/solbero/tempconv" alt="License" />
+    </a>
+</p>
 
 ## Demo
 
-![Demo](demo.gif)
+<img src="https://github.com/solbero/tempconv/blob/main/demo.gif" alt="Demo" style="zoom:90%;" />
 
 ## Description
 
