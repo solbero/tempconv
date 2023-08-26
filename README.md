@@ -1,5 +1,6 @@
+<br />
 <p align="center">
-    <img src="https://raw.githubusercontent.com/solbero/tempconv/main/logo.png" alt="Logo" />
+    <img src="https://raw.githubusercontent.com/solbero/tempconv/main/logo.png" alt="Logo" style="zoom:90%;" />
 </p>
 <p align="center">
     <em>Temperature conversion tool for the command line written in Go.</em>
