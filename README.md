@@ -51,7 +51,7 @@ If you have Go installed, you can install tempconv with the following command:
 
 
 ```sh
-go install https://github.com/solbero/tempconv
+go install github.com/solbero/tempconv@latest
 ```
 
 ## Usage
